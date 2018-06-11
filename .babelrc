@@ -1,0 +1,18 @@
+{
+  "presets": [
+    ["env", { "modules": false }],
+    "stage-3"
+  ],
+  "ignore": [
+    "./src/views/home/DefaultSheet.js"
+  ],
+  "plugins": ["transform-runtime","transform-vue-jsx","syntax-dynamic-import","transform-remove-strict-mode"],
+  "comments": false,
+  "compact": false,
+  "env": {
+    "test": {
+      "presets": ["env", "stage-3"],
+      "plugins": [ "istanbul" ]
+    }
+  }
+}

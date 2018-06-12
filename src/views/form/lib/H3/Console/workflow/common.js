@@ -51,6 +51,7 @@ export const ShowFormulaHtml=async function(formula,ctrl,schemaCode,requestApi) 
   if(requestApi && (typeof requestApi === 'function')){
     let userParams = {
       formula,
+      appId: schemaCode,
     }
     let res = await requestApi(userParams);
     if (res.code === '0'){

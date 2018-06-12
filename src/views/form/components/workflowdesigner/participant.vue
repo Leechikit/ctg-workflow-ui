@@ -15,7 +15,7 @@
                     </template>
                     <template v-if="node.NodeType==1">
                         <span class="icon-control"></span>
-                        <span>{{node.DisplayName}}</span>
+                        <span>{{node.displayName}}</span>
                         <span  @click="removeCheck(node)"><Icon type="close"></Icon></span>
                     </template>
                     <template v-if="node.NodeType==2">
@@ -35,10 +35,10 @@
                 <TabPane class="myTabPane" label="角色" name="role" v-if="showRole">
                     <role></role>
                 </TabPane>
-               <!--  <TabPane :label="controlTabTitle" name="usercontrols">
+                <TabPane :label="controlTabTitle" name="usercontrols">
                     <participantcontrol :check-mode="checkMode" :source="variableSource"></participantcontrol>
                 </TabPane>
-                <TabPane label="通过函数查找" name="function" v-if="showFunction">
+                <!-- <TabPane label="通过函数查找" name="function" v-if="showFunction">
                     <functionpane @show="parentShow()" @hide="parentHide()"></functionpane>
                 </TabPane>
                 <TabPane label="其他参数" name="others" v-if="showOthers">
@@ -148,7 +148,7 @@
                 this.show = true;
                 this.getRootNodes();
             },
-            restore() {
+            async restore() {
                 var that = this;
                 //过滤控件
                 if (this.canSelectControls && this.canSelectControls.length > 0) {
@@ -166,7 +166,7 @@
                 if (this.formula) {
                     // let unitIds = this.formula.match(pattern);
                     // if (unitIds != null && unitIds.length > 0) {
-                        this.loadNamesByUnitIds(this.formula, function () {
+                        this.loadNamesByUnitIds(this.formula, this.schemaCode, function () {
                             that.InitFormulaItmes(that.formula);
                         });
                     // }
@@ -240,6 +240,18 @@
                             UnitType: 8
                         }
                         this.$store.state.participant.SelectedParticipants.push(node);
+                    }else if(item.toLowerCase().indexOf("s") == 0 || item.toLowerCase().indexOf("m") == 0){
+                        let node = {
+                            NodeType: NodeType.Variables,
+                            controlId: item.substring(3,item.length-1),
+                            displayName: showName,
+                        }
+                        if(item.toLowerCase().indexOf("u") == 1){
+                            node.UnitType = 4;
+                        }else if(item.toLowerCase().indexOf("o") == 1){
+                            node.UnitType = 2;
+                        }
+                        this.$store.state.participant.SelectedParticipants.push(node);
                     }else {
                         let paramStr = item.substring(item.indexOf("(") + 1, item.length - 1);
                         let params = paramStr.split(',');
@@ -311,7 +323,7 @@
                     this.$store.state.participant.OrgRoles = res.ListRole;
                     // this.$store.state.participant.Variables = res.Variables;
                     this.$store.state.participant.Others = ["-1"];
-                    // this.variableSource = $.extend(true, [], res.Variables);
+                    this.variableSource = $.extend(true, [], res.Variables);
                     this.restore();
                 }
                 // setTimeout((res) => {
@@ -330,8 +342,8 @@
                 // },1000);
                
             },
-            async loadNamesByUnitIds(unitIds, cb) {
-                let res = await LoadNamesByUnitIds(unitIds);
+            async loadNamesByUnitIds(unitIds, appId, cb) {
+                let res = await LoadNamesByUnitIds(unitIds, appId);
                 if (res.code == 0) {
                     let units = res.units;
                     this.UnitNames = units;
@@ -344,9 +356,8 @@
                 let res = "", displayName = '';
                 if (this.$store.state.participant.SelectedParticipants && this.$store.state.participant.SelectedParticipants.length > 0) {
                     for (let participant of this.$store.state.participant.SelectedParticipants) {
+                        let prefix = '', displayNameVal = '';
                         if (participant.NodeType === NodeType.Unit) {
-                            let prefix, displayNameVal = '';
-                            console.log(participant.UnitType);
                             switch(participant.UnitType){
                                 case UnitType.OrganizationUnit:
                                     prefix = 'o';
@@ -368,8 +379,24 @@
                             res += `${prefix}(${participant.id})+`;
                             displayName += `${displayNameVal}+`;
                         } else if (participant.NodeType === NodeType.Variables) {
-                            res += participant.Name + '+';
-                            displayName += participant.DisplayName + '+';
+                            switch(participant.controlKey){
+                                case 26:
+                                    prefix += 's';
+                                    break;
+                                case 27:
+                                    prefix += 'm';
+                                    break;
+                            }
+                            switch(participant.unitType){
+                                case UnitType.OrganizationUnit:
+                                    prefix += 'o';
+                                    break;
+                                case UnitType.User:
+                                    prefix += 'u';
+                                    break;
+                            }
+                            res += `${prefix}(${participant.controlId})+`;
+                            displayName += participant.displayName + '+';
                         } else if (participant.NodeType === NodeType.Function) {
                             res += participant.Formula + '+';
                             displayName += participant.DisplayName + '+';

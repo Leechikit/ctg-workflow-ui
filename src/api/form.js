@@ -43,6 +43,9 @@ export default {
     },
     parseFormulaText(param){
         return fetch('/act/model/parseFormulaText',param);
+    },
+    FormAttachment(param){
+        return fetch('/Form/updateDesc',param);
     }
     
 }

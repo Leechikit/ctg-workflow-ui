@@ -889,11 +889,7 @@ WorkflowProperty.prototype.syncAllCheckState = function($dataItemTable, index){
         if(index === 2){
             $checkboxs[1].checked = true;
         }
-        //开始节点可写
-        if(index == 0){
-            $checkboxs[1].checked = true;
-            $checkboxs.eq(1).change();
-        }
+
     }
 };
 

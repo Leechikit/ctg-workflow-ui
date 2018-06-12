@@ -5,6 +5,7 @@ module.exports = {
       callback();
       return;
     }
+    srcPath = 'https://as.alipayobjects.com/g/cicada/monaco-editor-mirror/0.6.1/min';
     const config = {
       paths: {
         vs: srcPath + '/vs'

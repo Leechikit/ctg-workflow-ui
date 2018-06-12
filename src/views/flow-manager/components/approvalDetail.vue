@@ -90,8 +90,8 @@
 
 
  <script>
-import './jquery.js'
-import './DefaultSheet.js'
+import '../../home/jquery.js'
+import '../../home/DefaultSheet.js'
 import '../../style/openModal.css'
 import HTTP from '../../../api/work-flow.js';
 export default {

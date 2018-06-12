@@ -6,9 +6,14 @@ import ExternalFormVue from '../../../../components/sheetdesigner/externalForm/i
 import '../../../plugins/sortable/DragSortable.js';
 import { AppTree } from './AppTree'
 import HTTP from '../../../../../../api/form.js'
-
+import {Message} from "iview";
 import '../../../../../../assets/bootstrap/js/bootstrap.min.js'
 import '../../../../../../assets/bootstrap/css/bootstrap.css'
+
+
+// import '../../plugins/zTree/css/zTreeStyle/zTreeStyle.css';
+import '../../../plugins/zTree/js/jquery.ztree.core.min.js';
+import '../../../plugins/zTree/js/jquery.ztree.excheck.min.js';
 
 import {UnitType} from '../../../../../form/config/const.js'
 
@@ -55,7 +60,8 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
   //标记表单是否已经保存过，如果表单DOM改变则标记为false，保存后修改为true
   this.IsSaved = false;
   if (sheetCode == null || sheetCode == void 0 || sheetCode == "") {
-    $.IShowError("表单不存在");
+    //$.IShowError();
+    Message.error("表单不存在");
     //setTimeout(function () { window.close(); }, 500);//提示后关闭
     //return;
   }
@@ -222,7 +228,7 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
       HTTP.load(that.SheetCode)
           .then(function (data) {
             if (!data.Successful) {
-              $.IShowError("加载失败1");
+              Message.error("加载失败");
               //window.close();
             }
             //console.log(data);
@@ -506,7 +512,8 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
           })
           .catch(err => {
               console.log(err);
-              $.IShowError("加载失败2");
+              //$.IShowError("加载失败2");
+              Message.error("加载失败2");
           }).finally(()=>{
       })
 
@@ -1314,19 +1321,22 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
           that.IsPosting = false;
           //console.log("btn_Save call back " + (new Date()).toLocaleString());
           if (!data.Successful) {
-            $.IShowError(data.ErrorMessage);
+            //$.IShowError(data.ErrorMessage);
+            Message.error(data.ErrorMessage);
           } else {
             // 重新加载表单数据
 			//luzx add
 			that.SheetCode = data.SheetCode;
             that.LoadSheet();
-            $.IShowSuccess("保存成功!");
+            //$.IShowSuccess("保存成功!");
+            Message.success("保存成功!");
             //保存后切换到“表单属性”
             that.$btn_SheetProperty.click();
           }
       })
       .catch(err => {
-              $.IShowError(data.ErrorMessage);
+              //$.IShowError(data.ErrorMessage);
+              Message.error(data.ErrorMessage);
       }).finally(()=>{
       })
 
@@ -1373,7 +1383,8 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
       //解析控件
       var rows = this.$SheetContent.children("div.row");
       if (rows.length == 0 && !unValidate) {
-        $.IShowError("没有设置字段");
+        //$.IShowError("没有设置字段");
+        Message.error("没有设置字段");
         return false;
       }
       //绑定摘要
@@ -1417,7 +1428,8 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
       if (!unValidate) {
         //判断表单名称
         if ($.Schema.NameSchema == "" || $.isEmptyObject($.Schema.NameSchema)) {
-          $.IShowError("没有设置数据标题");
+          //$.IShowError("没有设置数据标题");
+          Message.error("没有设置字段");
           $("#btn_SheetProperty").click();
           $("#SheetPropertys").collapse("show");
           return false;
@@ -1431,7 +1443,8 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
           var boschema = $(this).attr('data-boschemacode');
           if (!boschema) {
             var displayName = $(this).attr('data-displayname');
-            $.IShowError('[' + displayName + ']没有配置关联表单');
+            //$.IShowError();
+            Message.error('[' + displayName + ']没有配置关联表单');
             valid = false;
             return false;
           }

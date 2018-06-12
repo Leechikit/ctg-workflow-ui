@@ -395,12 +395,10 @@ import HTTP from "../../api/app-apply.js";
 import { filter } from "./filter.js";
 import router from "../../router/router.js";
 import ICol from "iview/src/components/grid/col";
-import Render from "../../component/render_dev.js";
 import log from "../flow-manager/designFlowModal/appInfoLog.vue";
 import { dataFormat } from "../../util/assist.js";
 import { parse } from "../../util/assist";
 import { mapGetters, mapMutations, mapActions } from "vuex";
-import { getRichPage } from "../../resource/assemble_resource";
 import DragableTable from "../tables/components/dragableTable.vue";
 import utils from "../../util/utils.js";
 import openModal from "../home/openModal.vue";
@@ -454,9 +452,9 @@ export default {
           render: (h, params) => {
             const row = params.row;
             const color =
-              row.status == 1 ? "blue" : row.status == 2 ? "yellow" : "green";
+              row.status == 1 ? "blue" : row.status == 2 ? "yellow" : row.status == 4? "red": "green";
             const text =
-              row.status == 1 ? "草稿" : row.status == 2 ? "审批中" : "结束";
+              row.status == 1 ? "草稿" : row.status == 2 ? "审批中" :row.status == 4 ? "驳回":"结束";
             return h(
               "Tag",
               {

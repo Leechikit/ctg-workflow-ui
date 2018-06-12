@@ -43,7 +43,7 @@ export default {
                 }
             }else if(node.NodeType===NodeType.Variables){
                 for(let u of state.SelectedParticipants){
-                    if(u.NodeType===node.NodeType && u.Name===node.Name){
+                    if(u.NodeType===node.NodeType && u.controlId===node.controlId){
                         exists=true;
                         break;
                     }
@@ -76,7 +76,7 @@ export default {
                             return;
                         }
                     }else if(node.NodeType===NodeType.Variables){
-                        if(node.Name===participant.Name){
+                        if(node.controlId===participant.controlId){
                             state.SelectedParticipants.splice(i,1);
                             return;
                         }
@@ -108,7 +108,7 @@ export default {
                             return;
                         }
                     }else if(node.NodeType===NodeType.Variables){
-                        if(tmp.Name===node.Name){
+                        if(tmp.controlId===node.controlId){
                             state.SelectedParticipants.splice(i,1);
                             return;
                         }

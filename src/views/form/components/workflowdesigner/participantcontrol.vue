@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="layout">
+        <div class="participant-control-layout">
             <div>
                 <ul>
-                    <li class="item" v-for="variable in controls" v-if="variable.Name" @click="toggleVariable(variable)" :key="variable.Name">
+                    <li class="item" v-for="variable in controls" v-if="variable.controlId" @click="toggleVariable(variable)" :key="variable.controlId">
                         <span class="icon-control" style="color: #2d7fff;"></span>
-                        <span class="node-name">{{variable.DisplayName}}</span>
+                        <span class="node-name">{{variable.displayName}}</span>
                         <div class="chk-contanier" >
                             <Checkbox v-model="variable.Active" v-if="checkMode!=1" @on-change="toggleCheck(variable)"></Checkbox>
                             <Radio v-model="variable.Active" v-if="checkMode==1" @on-change="toggleCheck(variable)"></Radio>
@@ -60,8 +60,8 @@
                     if(this.nameSpace==="MANAGER-Control"){
                         this.$store.state.participant.ManagerNode=null;
                         let tmp={
-                            Formula:'MANAGEROF('+node.Name+')',
-                            DisplayName:'MANAGEROF('+node.DisplayName+')',
+                            Formula:'MANAGEROF('+node.controlId+')',
+                            displayName:'MANAGEROF('+node.displayName+')',
                             NodeType: NodeType.Function
                         };
                         this.$store.state.participant.ManagerNode=tmp;
@@ -91,7 +91,7 @@
             },
             removeSelected(node){
                 for(let control of this.controls){
-                    if(control.Name===node.Name){
+                    if(control.controlId===node.controlId){
                         control.Active=false;
                         return;
                     }
@@ -102,9 +102,9 @@
             aa(val){
                 if(val && val.length>0){
                     let controls=val;
-                    for(let control of controls){
-                        control.Active=false;
-                    }
+                    // for(let control of controls){
+                    //     control.Active=false;
+                    // }
                     this.controls=$.extend(true,[],controls);
                 }
             }
@@ -117,7 +117,7 @@
     }
 </script>
 <style lang="less" scoped>
-    .layout {
+    .participant-control-layout {
         width:100%;
         height:218px;
         overflow-y: scroll;

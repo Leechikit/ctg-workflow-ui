@@ -58,18 +58,18 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" canDropType="STG" class="drag ui-draggable currentUnsupport" data-controlkey="FormUser" title="人员单选">
+                                <a href="javascript:void(0);" canDropType="STG" class="drag ui-draggable " data-controlkey="FormUser" title="人员单选">
                                      <Icon type="ios-person" color="#57a3f3"></Icon>&nbsp&nbsp 人员单选
                                 </a>
-                                <a href="javascript:void(0);" canDropType="STG" class="drag ui-draggable currentUnsupport" data-controlkey="FormMultiUser" title="人员多选">
+                                <a href="javascript:void(0);" canDropType="STG" class="drag ui-draggable " data-controlkey="FormMultiUser" title="人员多选">
                                      <Icon type="ios-people" color="#57a3f3"></Icon>&nbsp&nbsp 人员多选
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" canDropType="STG" class="drag ui-draggable currentUnsupport" data-controlkey="FormDepartment" title="部门单选">
+                                <a href="javascript:void(0);" canDropType="STG" class="drag ui-draggable " data-controlkey="FormDepartment" title="部门单选">
                                      <Icon type="ios-list-outline" color="#57a3f3"></Icon>&nbsp&nbsp 部门单选
                                 </a>
-                                <a href="javascript:void(0);" canDropType="STG" class="drag ui-draggable currentUnsupport" data-controlkey="FormMultiDepartment" title="部门单选">
+                                <a href="javascript:void(0);" canDropType="STG" class="drag ui-draggable " data-controlkey="FormMultiDepartment" title="部门单选">
                                      <Icon type="ios-paper-outline" color="#57a3f3"></Icon>&nbsp&nbsp 部门多选
                                 </a>
                             </li>

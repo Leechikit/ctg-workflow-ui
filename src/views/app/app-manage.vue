@@ -103,6 +103,16 @@
     @media only screen and (max-width: 100px){
         .our-team{ margin-bottom: 30px; }
     }
+    .ivu-menu-dark{
+        background: none;
+    }
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):hover, .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu):hover{
+        background: none;
+    }
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu){
+        color: inherit;
+        border-right:  none;
+    }
 </style>
 
 <!--模板部分-->
@@ -120,7 +130,7 @@
                 <div>
                     <span>&nbsp</span>
                     <template v-for="app in appInstData">
-                        <Menu :theme="theme1" active-name="1" >
+                        <Menu theme="dark" active-name="1" >
                             <MenuItem name="1" @click.native="appManage(app.id, app.moduleId, app.modelId)">
                                 <Icon type="document-text"></Icon>
                                 {{app.appName}}
@@ -202,7 +212,6 @@
     import addApp from './designFlowModal/addNewAppInstance.vue';
     import router from '../../router/router.js';
     import ICol from 'iview/src/components/grid/col';
-    import Render from '../../component/render_dev.js';
     import log from '../flow-manager/designFlowModal/appInfoLog.vue';
     import {dataFormat} from '../../util/assist.js';
     import {getUserRoleAndPermission} from '../../api/role.js';

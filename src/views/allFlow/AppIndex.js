@@ -21955,7 +21955,7 @@ $.FormMultiUserData = {
                                 if (!that.ExistChoice(item.id)) {
                                     //that.AddChoice.apply(that, [item]);
                                     //that.SetValue.apply(that, [item]);
-                                    addItems.push(item.id);
+                                    addItems.push(item);
                                 }
                                 continue;
                             } else {

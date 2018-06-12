@@ -60,6 +60,7 @@ if(typeof jQuery==="undefined"){throw new Error("jquery-confirm requires jQuery"
 
 import HTTP from "../../api/form.js"
 import { Message } from "iview";
+import axios from "axios";
 
 (function (factory) {
     if (typeof define === 'function' && define.amd)
@@ -14364,7 +14365,6 @@ jQuery.extend(
                         content:'提交成功',
                         duration: 3
                     });
-                    $emit('submitForm',"true");
                 }
                 // 从关联查询跳转到非流程表单中新增关联对象，在提交后，将值反写回去
                 var sheetQueryField = $.IQuery("SheetQueryField");
@@ -18225,7 +18225,7 @@ jQuery.extend({
                                 if (!that.ExistChoice(item.id)) {
                                     //that.AddChoice.apply(that, [item]);
                                     //that.SetValue.apply(that, [item]);
-                                    addItems.push(item.id);
+                                    addItems.push(item);
                                 }
                                 continue;
                             } else {
@@ -23275,7 +23275,8 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
 
     // 构造函数
     $.Controls.FormAttachment = function (element, ptions, sheetInfo) {
-        this.SheetAttachmentHandler = "/Form/SheetAttachmentAction/";
+        
+        this.SheetAttachmentHandler = axios.defaults.baseURL+"/Form/SheetAttachmentAction/";
         //上传控件
         this.FileUpload = $("<input type='file' data-attachment='true' multiple='multiple' style='display:none;'/>");
         //文件数
@@ -23555,10 +23556,10 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
             if (url == void 0) {
                 if (description == null || description == void 0 || $.trim(description).length == 0) {
                     trRow.append("<td style='padding-left:10px !important;'><div class='LongWord' title='" + name + "' id='" + fileid + "'>" + name + "</div></td>");
-                    trRow_description.append("<td colspan='2'style='padding:8px 10px !important' ><input disabled='disabled'  class='form-control description-file' id='" + fileid + "' placeholder='请输入附件描述' type='text' maxlength='200' value=''/></td><td style='text-align:center;padding:12px 10px !important;'><a  disabled='disabled' class='icon-save saveDec disabled'>保存</a><a  class='icon-bianji editDec'>编辑</a></td>");
+                    trRow_description.append("<td colspan='2'style='padding:8px 10px !important' ><input disabled='disabled'  class='form-control description-file' id='" + fileid + "' placeholder='请输入附件描述' type='text' maxlength='200' value=''/></td><td style='text-align:center;padding:12px 10px !important;'><a   class='icon-save saveDec disabled'>保存</a><a  class='icon-bianji editDec'>编辑</a></td>");
                 } else {
                     trRow.append("<td style='padding-left:10px !important;' ><div class='LongWord' title='" + name + "' id='" + fileid + "'>" + name + "</div></td>");
-                    trRow_description.append("<td colspan='2'style='padding:8px 10px !important' ><input disabled='disabled'  class='form-control description-file' id='" + fileid + "' placeholder='请输入附件描述' type='text' maxlength='200' value='" + description + "'/></td><td style='text-align:center;padding:12px 10px !important'><a  disabled='disabled' class='icon-save saveDec disabled'>保存</a><a class='icon-bianji editDec'>编辑</a></td>");
+                    trRow_description.append("<td colspan='2'style='padding:8px 10px !important' ><input disabled='disabled'  class='form-control description-file' id='" + fileid + "' placeholder='请输入附件描述' type='text' maxlength='200' value='" + description + "'/></td><td style='text-align:center;padding:12px 10px !important'><a   class='icon-save saveDec disabled'>保存</a><a class='icon-bianji editDec'>编辑</a></td>");
                 }
             }
             if (url != void 0) {
@@ -23627,13 +23628,12 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                     attachmentId = $(this).parent().parent().children(':first').find('input').attr('id');
                 }
                 var params = {
-                    ActionName: "UpdateFileDesc",
-                    FileId: attachmentId,
-                    FileDec: FileDec
+                    id: attachmentId,
+                    fileDesc: FileDec
                 };
                 $btn_saveDec = $(this);
-                $.get("/Form/OnAction/", { PostData: JSON.stringify(params) }, function (data) {
-                    if (data.Successful) {
+                $.get(axios.defaults.baseURL+"/Form/updateDesc",params, function (data) {
+                    if (data.code==0) {
                         //$.IShowSuccess("保存附件描述成功");
                         Message.success({
                             content:'保存附件描述成功',
@@ -23807,13 +23807,12 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                     attachmentId = $(this).parent().parent().children(':first').find('div').attr('id');
                 }
                 var params = {
-                    ActionName: "UpdateFileDesc",
-                    FileId: attachmentId,
-                    FileDec: FileDec
+                    id: attachmentId,
+                    fileDesc: FileDec
                 };
                 var $btn_saveDec = $(this);
-                $.get("/Form/OnAction/", { PostData: JSON.stringify(params) }, function (data) {
-                    if (data.Successful) {
+                $.get(axios.defaults.baseURL+"/Form/updateDesc", params, function (data) {
+                    if (data.code==0) {
                         //$.IShowSuccess("保存附件描述成功");
                         Message.success({
                             content:'保存附件描述成功',
@@ -23922,13 +23921,12 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                     //var attachmentId = $(this).parent().parent().children(':first').find('div').attr('data-attachementid');
                     var attachmentId = $(this).parent().parent().prev().find('div').attr('data-attachementid');
                     var params = {
-                        ActionName: "UpdateFileDesc",
-                        FileId: attachmentId,
-                        FileDec: FileDec
+                        id: attachmentId,
+                        fileDesc: FileDec
                     };
                     var $btn_saveDec = $(this);
-                    $.get("/Form/OnAction/", { PostData: JSON.stringify(params) }, function (data) {
-                        if (data.Successful) {
+                    $.get(axios.defaults.baseURL+"/Form/updateDesc", params, function (data) {
+                        if (data.code==0) {
                             //$.IShowSuccess("保存附件描述成功");
                             Message.success({
                                 content:'保存附件描述成功',

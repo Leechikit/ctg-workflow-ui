@@ -11,15 +11,9 @@ import util from './libs/util';
 import $ from 'jquery';
 
 //拖拽
-import VueResource from "vue-resource";
-import interceptor from './plugin/interceptor'
-import installDirective from "./plugin/install_directive"//don't delete,let vue install
-import SoulUi from "./plugin/install_component"
 import Store from './store/index'
 import 'iview/dist/styles/iview.css'
 import './style/index.less'
-import  VueQuillEditor from 'vue-quill-editor'
-import VueHighlightJS from 'vue-highlightjs'
 
 //图标
 import './iconfont/iconfont.css'
@@ -36,17 +30,7 @@ import "./views/form/sheetDesigner/page/style.css"
 
 
 
-
-
-
-Vue.use(VueHighlightJS)
-Vue.use(VueQuillEditor)
-
 Vue.dev = true
-
-Vue.use(VueResource)
-Vue.use(SoulUi)
-
 
 Vue.use(VueI18n);
 Vue.use(iView);

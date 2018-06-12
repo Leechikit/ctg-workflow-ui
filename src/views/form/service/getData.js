@@ -1005,9 +1005,10 @@ export const validateFormula = (schemaCode, formula, formulaType, formulaField) 
  * @param {*} formulaType 
  * @param {*} formulaField 
  */
-export const LoadNamesByUnitIds = (formula) => {
+export const LoadNamesByUnitIds = (formula, appId) => {
   var params = {
     formula,
+    appId,
   };
   
   return fetch('/parseParticipantName', params);

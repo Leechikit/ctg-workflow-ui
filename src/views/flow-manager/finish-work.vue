@@ -410,7 +410,7 @@
                          data-ismultiple='false' data-uservisible='true' data-orgunitvisible='false' data-width='100%'></div></td>   
                                     </tr>
                                 </tbody>
-                                 <Button type="success" @click="getUnFinishJobList()">确定</Button>
+                                 <Button type="success" @click="getFinishJobList()">确定</Button>
                                  <Button type="text" @click="closeFilter()">取消</Button>
                             </table>
                         </div>

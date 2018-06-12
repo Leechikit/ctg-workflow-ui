@@ -20,7 +20,7 @@ export let FormulaTypeTitle = {
         placeholder: '例：员工状态=="未转正"',
         formulaDescription: [
             '请从左侧面板选择字段或选项',
-            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数',
+            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数',
             '参考场景：<br/>仅对表单中员工状态字段的值等于未转正的数据进行提醒，则可将提醒条件设置为：员工状态=="未转正"'
         ]
     },
@@ -30,7 +30,7 @@ export let FormulaTypeTitle = {
         placeholder: '例：报销金额>10000',
         formulaDescription: [
             '请从左侧面板选择字段或选项',
-            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数',
+            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数',
             '参考场景：<br/> 报销金额控件输入的值大于10000时，需要隐藏当前控件，则可将隐藏条件设置为：报销金额>10000'
         ]
     },
@@ -40,7 +40,7 @@ export let FormulaTypeTitle = {
         placeholder: '例: 数量*单价',
         formulaDescription: [
             '请从左侧面板选择字段或选项',
-            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数',
+            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数',
             '参考场景：<br/> 根据输入的数量和单价，自动计算出金额，则可将计算公式设置为：数量*单价'
         ]
     },
@@ -50,7 +50,7 @@ export let FormulaTypeTitle = {
         placeholder: '例：关联表单.员工状态=="未转正"',
         formulaDescription: [
             '请从左侧面板选择字段或选项',
-            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数',
+            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数',
             '参考场景：<br/> 仅可选择关联表单中员工状态为未转正的数据，则可将数据范围设置为：关联表单.员工状态=="未转正"'
         ]
     },
@@ -61,7 +61,7 @@ export let FormulaTypeTitle = {
         formulaDescription: [
             '请先从左侧面板设定目标表单',
             '再从右侧插入高级函数，如UPDATE(),并按照函数指引进行操作',
-            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数'
+            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数'
         ]
     },
     BUSINESS1: {
@@ -71,7 +71,7 @@ export let FormulaTypeTitle = {
         formulaDescription: [
             '请先从左侧面板设定目标表单',
             '再从右侧插入高级函数，如UPDATE(),并按照函数指引进行操作',
-            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数'
+            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数'
         ]
     },
     SCHEMASUBMIT: {
@@ -80,7 +80,7 @@ export let FormulaTypeTitle = {
         placeholder: '例：报销金额>10000',
         formulaDescription: [
             '请从左侧面���选择字段或选项',
-            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数',
+            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数',
             '参考场景：<br/> 报销金额控件的值大于10000时，不允许提交表单，则可将校验条件设置为：报销金额>10000'
         ]
     },
@@ -90,7 +90,7 @@ export let FormulaTypeTitle = {
         placeholder: '例: 数量*单价',
         formulaDescription: [
             '请从左侧面板选择字段或选项',
-            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数'
+            '支持<span style="color:#d25f5f;font-size:12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数'
         ]
     },
     ActivityName: {
@@ -99,7 +99,7 @@ export let FormulaTypeTitle = {
         placeholder: '例："请及时处理"+发起人+"的请假单"',
         formulaDescription: [
             '请从左侧面板选择字段或选项',
-            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数',
+            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数',
             '消息示例："请及时处理"+发起人+"的请假单"'
         ]
     },
@@ -109,7 +109,7 @@ export let FormulaTypeTitle = {
         placeholder: '例：报销金额>10000',
         formulaDescription: [
             '请从左侧面板选择字段或选项',
-            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符（+、-、*、/、>、<、==、!=、<=、>=、!=、&&、||、%）及函数',
+            '支持<span style="color:#d25f5f;font-size: 12px;">英文</span>模式下运算符(+,-,*,/,>,<,==,!=,<=,>=,!=,&&,||,%)及函数',
             '参考场景：<br/> 当报销金额大于10000时，才能进入这条连接线下的节点，则可将流转条件设置为：报销金额>10000'
         ]
     }

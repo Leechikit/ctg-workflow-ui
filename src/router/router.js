@@ -62,8 +62,7 @@ export const otherRouter = {
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
         { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
         // { path: 'app-index', title: '新建应用', name: 'appPage_index', component: () => import('@/views/app/app-apply.vue') },
-        { path: 'app-index', title: '应用管理', name: 'appManager_index', component: () => import('@/views/app/app-manage.vue') },
-        { path: 'form-index', title: '表单自定义', name: 'formpage_index', component: () => import('@/views/esview/assemble/assemble_page') }
+        { path: 'app-index', title: '应用管理', name: 'appManager_index', component: () => import('@/views/app/app-manage.vue') }
     ]
 };
 

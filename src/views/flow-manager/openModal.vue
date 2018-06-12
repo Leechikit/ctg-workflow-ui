@@ -51,6 +51,7 @@
 
 <body>
     <!-- Fixed navbar -->
+   
     <nav class="sheet-navbar navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -64,19 +65,19 @@
                     <span class="navbar-head"></span> <span id="navarbarSheetName"></span>
                 </a>
             </div>
-
+            <Association></Association>
             <div id="navbar" class="navbar-collapse collapse navbar-right">
                 <ul data-sheettoolbar="true" class="nav navbar-nav"></ul>
             </div><!--/.nav-collapse -->
         </div>
     </nav>
-
+    
     <div class="container-fluid sheet_container">
         <!-- Form标签改成div 20170629-->
         <div id="SheetContent" data-bv-message="This value is not valid"
              data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
              data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
-             data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"></div>
+             data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"> <Button @click="test()">Test</Button></div>
     </div>
 
     <!-- 底部工具栏 在显示在弹出框时显示-->
@@ -109,15 +110,20 @@
 
  <script>
 import '../home/jquery.js'
-import './DefaultSheet.js'
+import '../home/DefaultSheet.js'
 
 import HTTP from '../../api/form.js'
+import Association from "./components/associationSheet.vue"
+
 export default {
     name: 'dataSourcePie',
     data () {
         return {
             //
         };
+    },
+    components: {
+    Association,
     },
     props:['code'],
     mounted () {

@@ -381,7 +381,7 @@ div.search-wrapper>.form-search span.search-btn {
                                 </div>
                                 <div class="box-recent-operate">
                                     <span v-if="checkPerm(['act:deal:start:'+item.appKey])" class="xinzengshuju " @click="showRender(item.id,item.appName);">新增</span>
-                                    <span v-if="!checkPerm(['act:deal:start:'+item.appKey])" class="xinzengshuju " >    </span>
+                                    <!-- <span v-if="!checkPerm(['act:deal:start:'+item.appKey])" class="xinzengshuju " >    </span> -->
                                     |
                                     <span class="chakanliebiao "@click="showApp(item.moduleId,item.appName,item.id,item.appKey)" >查看</span>
                                 </div>
@@ -646,11 +646,9 @@ div.search-wrapper>.form-search span.search-btn {
 import cityData from './map-data/get-city-value.js';
 import HTTP from '../../api/app-apply.js';
 import router from '../../router/router.js';
-import Render from '../../component/render_dev.js';
 import {dataFormat} from '../../util/assist.js';
 import {parse} from'../../util/assist';
 import {mapGetters, mapMutations, mapActions} from 'vuex';
-import {getRichPage} from '../../resource/assemble_resource';
 import utils from '../../util/utils.js';
 import openModal from './openModal.vue';
 

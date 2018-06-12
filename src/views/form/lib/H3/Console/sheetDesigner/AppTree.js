@@ -4,6 +4,7 @@
     Stage:规则编辑器、参与者、报表数据源等
 */
 import {baseUrl} from '../../../../config/env';
+import HTTP from '../../../../../../api/app-apply.js'
 //封装apptree
 var AppTree = (function ($) {
     //应用树节点类型

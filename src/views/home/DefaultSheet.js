@@ -23336,9 +23336,9 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                 if (this.BizObjectId == void 0) {
                     this.BizObjectId = this.ResponseContext.BizObjectId;
                 }
-
+                this.Value = JSON.parse(this.Value);
                 for (var i = 0; i < this.Value.length; ++i) {
-                    this.CreateFileElement2(this.Value[i].Code, this.Value[i].Name, this.Value[i].Size, this.Value[i].Url, this.Value[i].ThumbnailUrl, this.Value[i].Description);
+                    this.CreateFileElement2(this.Value[i].Code, this.Value[i].Name, this.Value[i].Size, axios.defaults.baseURL+this.Value[i].Url, this.Value[i].ThumbnailUrl, this.Value[i].Description);
                 }
             }
         },
@@ -23372,9 +23372,19 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
 
         GetValue: function () {
             var AttachmentIds = "";
+            console.log(this.AddAttachments);
+            var result = [];
             for (var key in this.AddAttachments) {
                 if (this.AddAttachments[key].state == 1 && this.AddAttachments[key].AttachmentId) {
                     AttachmentIds += this.AddAttachments[key].AttachmentId + ";";
+                    //改造内容
+                    result.push({
+                        Code: this.AddAttachments[key].AttachmentId,
+                        Name: this.AddAttachments[key].file.name,
+                        Size: this.AddAttachments[key].file.size,
+                        Url: this.AddAttachments[key].Url,
+                        Description: this.AddAttachments[key].FileDec
+                    })
                 }
             }
 
@@ -23382,10 +23392,10 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
             for (var i = 0; i < this.RomveAttachments.length; ++i) {
                 DelAttachmentIds += this.RomveAttachments[i] + ";";
             }
-            var result = {
-                AttachmentIds: AttachmentIds,
-                DelAttachmentIds: DelAttachmentIds
-            };
+            // var result = {
+            //     AttachmentIds: AttachmentIds,
+            //     DelAttachmentIds: DelAttachmentIds
+            // };
             return result;
         },
 
@@ -23566,7 +23576,7 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                 }
             }
             if (url != void 0) {
-                trRow.append("<td style='padding-left:10px !important;'><a href='" + url + "' data-imgurl='" + thumb + "' target='_blank' UC=true><div class='LongWord'>" + name + "</div></a></td>");
+                trRow.append("<td style='padding-left:10px !important;'><a href='" + url + "' data-imgurl='" + url + "' target='_blank' UC=true><div class='LongWord'>" + name + "</div></a></td>");
                 trRow_description.append("<td colspan='2' ><div class='description'>" + description + "</div></td><td></td>");
                 if (isImg && !this.Editable) { //如果是图片则展示缩略图
                     var td_thumb = trRow.find('a');
@@ -23895,6 +23905,7 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                 $("#describle").val("");
                 this.context.AddAttachments[fileid].state = 1;
                 this.context.AddAttachments[fileid].AttachmentId = resultObj.AttachmentId;
+                this.context.AddAttachments[fileid].Url = resultObj.ThumbnailUrl;
                 $("div[id=" + fileid + "]").attr({ "data-imgurl": resultObj.ThumbnailUrl, 'data-attachementId': resultObj.AttachmentId });
                 $("td[data-action='" + fileid + "']").prepend("&nbsp;&nbsp;");
                 /*
@@ -23903,10 +23914,13 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                 $("span[data-filerate='" + fileid + "']").html("100%");
                 $("input.description-file").removeAttr("disabled");
                 $("a.saveDec.disabled").removeClass("disabled");
+                var that = this.context.AddAttachments[fileid];
                 $("a.saveDec").off("click").on("click", function () {
                     $(this).hide();
                     var $input = $(this).parent().parent().find("input");
                     var FileDec = $input.val();
+                    console.log(that);
+                    that.FileDec = FileDec;
                     if (FileDec.length > 200) { //$.IShowError('描述长度不能超过200个字符!');
                     Message.error({
                         content:"描述长度不能超过200个字符!",
@@ -23968,6 +23982,24 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
         UploadCanceled: function () {
         },
 
+        // RemoveFile: function (fileID) {
+        //     $("#" + fileID).remove();
+        //     $("[data-targetid='" + fileID + "']").remove();
+
+        //     this.Files--;
+        //     if (this.AddAttachments[fileID]) {
+        //         if (this.AddAttachments[fileID].xhr) {
+        //             this.AddAttachments[fileID].xhr.abort();
+        //         }
+        //         delete this.AddAttachments[fileID];
+        //     }
+        //     else {
+        //         this.RomveAttachments.push(fileID);
+        //     }
+        //     this.Validate();
+        //     this.OnChange(this, []);
+        // },
+
         RemoveFile: function (fileID) {
             $("#" + fileID).remove();
             $("[data-targetid='" + fileID + "']").remove();
@@ -23978,6 +24010,13 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                     this.AddAttachments[fileID].xhr.abort();
                 }
                 delete this.AddAttachments[fileID];
+                axios.post(`${axios.defaults.baseURL}/Form/delFile`,{
+                    id: this.AddAttachments[fileID].attachmentId,
+                }).then( res => {
+
+                }).catch(err => {
+                    console.log(err)
+                })
             }
             else {
                 this.RomveAttachments.push(fileID);
@@ -28219,19 +28258,18 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                             var params = {
                                 ActionName: "GetBizObjectSchemaDisplayName", SchemaCode: that.BOSchemaCode, flag: $.IGuid()
                             }
-
                             HTTP.getBizObjectSchemaDisplayName(that.BOSchemaCode).then((data)=>{
                                 if (data.code==0) {
                                     var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + boId + "&Mode=View";
                                     // $.ISideModal.Show(url,data.data.DisplayName);
-                                    Modal.confirm({
+                                    Modal.info({
                                         //scrollable:true,
-                                        okText:'确定',
-                                        width:"1200px",
+                                        title: inputText,
+                                        width:"800px",
                                         render: (h) => {
                                             return h(openModal, {
                                                 props: {
-                                                    code:that.BOSchemaCode
+                                                    code:boId
                                                 },
                                                 on: {
                                                    

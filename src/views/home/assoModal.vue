@@ -167,8 +167,9 @@ export default {
         param.BizObjectId="";
         param.SideModal=true;
 	
-        HTTP.FormGet(param)
+        HTTP.getAssociationFormDetail(this.code)
             .then((result)=>{
+                console.log(result);
                 var that=this;
                 if (result.Successful) {
                 var displayName = result.ReturnData.DisplayName;

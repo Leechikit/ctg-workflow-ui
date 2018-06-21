@@ -1,0 +1,24 @@
+{
+    "Successful": true,
+    "ErrorMessage": null,
+    "Logined": true,
+    "data": {
+        "title": "表单名称",
+        "listviewData": [{
+            "name": "字段名称",
+            "id": "字段id",
+            "type": "展示类型（输入框，多选..）",
+            "isChildSchema": "是否子表",
+            "isVisible": "是否可见",
+            "canSort": "是否可排序",
+            "children": [{
+                "name": "字段名称",
+                "id": "字段id",
+                "parentId": "父表id",
+                "type": "展示类型（输入框，多选..）",
+                "isVisible": "是否可见",
+                "canSort": "是否可排序"
+            }]
+        }]
+    }
+}

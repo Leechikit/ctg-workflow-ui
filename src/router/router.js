@@ -238,8 +238,10 @@ export const appRouter = [
             { path: 'self-submit', title: '我的提交',icon: 'person', name: 'self-submit', component: () => import('@/views/flow-manager/self-submit.vue') },
             { path: 'unfinish-job', title: '我的未办',icon: 'person', name: 'unfinish-job', component: () => import('@/views/flow-manager/unfinish-job.vue') },
             { path: 'add-form', title: '表单新增',icon: 'android-send', name: 'add-form', component: () => import('@/views/form/pages/sheetDesignerIndex/pages.vue') },
-            { path: 'start-application/:moduleId', title: '应用新增',icon: 'android-send', name: 'start-application', component: () => import('@/views/allFlow/allflow.vue') }
-
+            // { path: 'start-application/:moduleId', title: '应用新增',icon: 'android-send', name: 'start-application', component: () => import('@/views/allFlow/allflow.vue') },
+            { path: 'start-application/:moduleId', title: '应用新增',icon: 'android-send', name: 'start-application', component: () => import('@/views/listview/pages/tablelist.vue') },
+            { path: 'design-list', title: '列表设计',icon:'pinpoint', name: 'design-list', component: ()=> import('@/views/listview/pages/listviewdesign.vue')}
+        
         ]
     },
     {

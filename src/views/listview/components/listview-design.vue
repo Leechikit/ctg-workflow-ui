@@ -276,29 +276,12 @@
           <div>
             <div class="item-title item-title-list">列表字段</div>
             <div id="DesignerView" class="DesignerView">
-              <i-table border :columns="tableColumns" width="100%"></i-table>
-            </div>
-            <div id="TablePageIndex" class="table-page">
-              <div class="page-index">
-                <input type="text" value="1" class="Page_Index" readonly> /
-                <label class="Page_Count">1</label>
-              </div>
-              <div class="btn-group table-page_ButtonGroup" style="width: 160px;">
-                <button class="btn Page_Num_Pre disable" disabled="disabled">上一页</button>
-                <button class="btn Page_Num_Next disable" disabled="disabled">下一页</button>
-              </div>
-              <div class="page-size dropup">
-                <button disabled="disabled" class="btn">
-                  <span class="Page_Per_Size">10</span>
-                  <i class="ivu-icon ivu-icon-chevron-down" style="font-size: 11px;"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a>10</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="page-total">共1条</div>
+                  <div class="listview-table">
+                    <Table border :columns="tableColumns" :data="tableDatas" :stripe="true"></Table>
+                  </div>
+                  <div id="TablePageIndex" class="table-page">
+                    <Page class-name="list-page" :current="pageNum" :total="total" :show-elevator="true" show-sizer show-total @on-change="changePageNum" @on-page-size-change="changePageSize"></Page>
+                </div>
             </div>
           </div>
         </div>
@@ -687,23 +670,110 @@ li.select-all-child {
   }
 
   #DesignerView{
-    .ivu-table{
-      overflow-x: auto;
-      table{
-        table-layout: auto;
+    .listview-table {
+      flex-grow: 1;
+      .ivu-table-wrapper{
+        border: none;
+      }
+      .ivu-table:after{
+        display: none;
+      }
+      .ivu-table-body{
+        .ivu-table-column-center{
+          border: none;
+        }
+      }
+      .ivu-table-border td, .ivu-table-border th {
+          &:last-child{
+            border-right: none;
+          }
       }
     }
-    .ivu-table-header{
-      overflow: visible;      
-    }
-    .ivu-table-body{
-      overflow: visible;
-    }
-    .ivu-table-cell{
-      span{
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .table-page {
+      height: 45px;
+      margin-bottom: 10px;
+      margin-top: -1px;
+      padding: 5px;
+      background-color: #fff;
+      position: relative;
+      border: 0;
+      border-top: 1px solid #e2e6e8;
+
+      .page-index {
+        position: absolute;
+        right: 303px;
+        width: 100px;
+        padding-left: 45px;
+        line-height: 28px;
+
+        input {
+          text-align: center;
+          width: 40px;
+          height: 31px;
+          border-radius: 3px;
+          background-color: #f1f3f5;
+          border: solid 1px #f1f3f5;
+          position: absolute;
+          left: 0;
+          color: #666666;
+        }
+
+        label {
+          line-height: 31px;
+          padding: 0;
+          font-weight: normal;
+          margin-left: 3px;
+          color: #666666;
+        }
+      }
+
+      .table-page_ButtonGroup {
+        position: absolute;
+        margin: 0 15px;
+        width: 160px;
+        right: 139px;
+
+        .btn {
+          height: 31px;
+          margin-right: 10px;
+        }
+
+        button {
+          opacity: 1;
+          background-color: #f1f3f5;
+        }
+
+        button.disable {
+          background-color: #f1f3f5;
+        }
+      }
+
+      .page-size {
+        margin-right: 15px;
+        position: absolute;
+        width: 60px;
+        right: 70px;
+
+        button {
+          position: absolute;
+          top: 0px;
+          right: 0px;
+          width: 70px;
+          height: 31px;
+          background: #f1f3f5;
+          border-radius: 3px;
+        }
+      }
+
+      .page-total {
+        position: absolute;
+        width: auto;
+        right: 20px;
+        height: 28px;
+        padding-top: 8px;
+        text-align: center;
         white-space: nowrap;
+        color: #333333;
       }
     }
   }

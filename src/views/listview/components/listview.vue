@@ -24,7 +24,7 @@
         </div>
         <div class="g-right">
               <div class="listview-table">
-                  <Table border :columns="tableColumns" :data="tableDatas" :stripe="true" no-data-text="--" :loading="isLoading"></Table>
+                  <Table border :columns="tableColumns" :data="tableDatas" :stripe="true" :loading="isLoading"></Table>
               </div>
               <div id="TablePageIndex" class="table-page">
                 <Page class-name="list-page" :current="pageNum" :total="total" :show-elevator="true" show-sizer show-total @on-change="changePageNum" @on-page-size-change="changePageSize"></Page>

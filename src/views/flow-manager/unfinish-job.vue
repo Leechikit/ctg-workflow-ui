@@ -435,20 +435,21 @@
                             </Row>
                             <Row>
                                 <Col span="24">
-                                    <FormItem label="审批意见" >
+                                    <FormItem v-if = "currentApproval.props.taskType != '5'" label="审批意见" >
                                         <Input v-model="currentApproval.props.taskResult" style="margin-right:50px" @on-change="valueChange"></Input>
                                     </FormItem>
                             </Col>
                             </Row>
                         </Form>
                         <div slot="footer">
-                                <Button v-if = "currentApproval.props.taskType != '4'" type="primary" @click="handleSubmit(currentApproval.props)">同意</Button>
-                                <Button v-if = "currentApproval.props.taskType != '4'" type="error" @click="handleReset(currentApproval.props)">反对</Button>
+                                <Button v-if = "currentApproval.props.taskType != '4' && currentApproval.props.taskType != '5'" type="primary" @click="handleSubmit(currentApproval.props)">同意</Button>
+                                <Button v-if = "currentApproval.props.taskType != '4' && currentApproval.props.taskType != '5'" type="error" @click="handleReset(currentApproval.props)">反对</Button>
                                 <Button type="primary" @click="openLogModal(currentApproval.props)">流程状态</Button>
-                                <Button v-if = "currentApproval.props.taskType != '4'" type="error" @click="handleResetTS(currentApproval.props)">驳回原点</Button>
-                                <Button v-if = "currentApproval.props.taskType != '4'" type="error" @click="turnModal = true">转办</Button>
-                                <Button v-if = "currentApproval.props.taskType != '4'" type="error" @click="getJumpNode(currentApproval.props)">跳转至</Button>
+                                <Button v-if = "currentApproval.props.taskType != '4' && currentApproval.props.taskType != '5'" type="error" @click="handleResetTS(currentApproval.props)">驳回原点</Button>
+                                <Button v-if = "currentApproval.props.taskType != '4' && currentApproval.props.taskType != '5'" type="error" @click="turnModal = true">转办</Button>
+                                <Button v-if = "currentApproval.props.taskType != '4' && currentApproval.props.taskType != '5'" type="error" @click="getJumpNode(currentApproval.props)">跳转至</Button>
                                 <Button v-if = "currentApproval.props.taskType == 4" type="primary" @click="updateCC(currentApproval.props)">确定</Button>
+                                <Button v-if = "currentApproval.props.taskType == 5" type="primary" @click="handleSubmit(currentApproval.props)">确定</Button>
                                 <Button type="ghost" @click="close()" style="margin-left: 8px">取消</Button>
                         </div>
                     </Modal>
@@ -1038,7 +1039,7 @@ export default {
       HTTP.updateCC(param)
         .then(res => {
           if (res.code == 0) {
-	    this.getUnFinishJobList();
+	         this.getUnFinishJobList();
             //this.removeFromList(name.ruWfTaskId);
             this.$Message.success("Success!");
           } else {
@@ -1052,6 +1053,7 @@ export default {
           this.modal2 = false;
         });
     },
+
     getUnFinishJobList(value = 0) {
       let param = {};
       if (value == 0) {
@@ -1102,6 +1104,7 @@ export default {
         })
         .catch(err => {
           this.$Message.error(err);
+          console.log(111111+err)
         })
         .finally(() => {
           this.getLoading = false;

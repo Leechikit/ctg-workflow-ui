@@ -140,7 +140,7 @@ export default {
      * 审批驳回
      */
     reject(param) {
-         return fetch('/act/deal/rejectEndFlow',param)
+         return fetch('/act/deal/rejectTask',param)
      },
      /**
       /**
@@ -194,5 +194,5 @@ export default {
     },
     parseParticipantName(params) {
         return fetch('/parseParticipantName', params);
-    },
+    }, 
 }

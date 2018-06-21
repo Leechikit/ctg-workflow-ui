@@ -4361,32 +4361,67 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
           requestCodes.push(schemaCodes[i]);
         }
       }
+      console.log(schemaCodes);
 
-      that.Requst(that.Action_LoadPublishedSchemas, { Codes: JSON.stringify(requestCodes) }, function (data) {
-        if (data.Successful) {
-          var schemas = data.ReturnData.PublishedSchemas;
-          for (var i = 0; i < schemas.length; i++) {
-            that.PublishedSchemas[schemas[i].SchemaCode] = schemas[i];
+      HTTP.LoadPublishedSchemas(schemaCodes).then((data)=>{
+          //data={"Successful":true,"ErrorMessage":null,"Logined":true,"ReturnData":{"PublishedSchemas":[]}};
+          if (data.code==0) {
+      
+            var schemas = data.data.schemas;
+            for (var i = 0; i < schemas.length; i++) {
+              that.PublishedSchemas[schemas[i].SchemaCode] = schemas[i];
+              console.log(that.PublishedSchemas);
+            }
+            if ($.isFunction(callBack)) {
+              callBack.apply(that);
+            }
           }
-          if ($.isFunction(callBack)) {
-            callBack.apply(that);
-          }
-        }
-      }, true);
+      })
+      // that.Requst(that.Action_LoadPublishedSchemas, { Codes: JSON.stringify(requestCodes) }, function (data) {
+        
+      // }, true);
     },
     //加载指定schema的property
     LoadPublishedSchemaProperty: function (schemaCode) {
       var that = this;
       var exist = that.SchemaProperties[schemaCode] != void 0;
-
       if (!exist) {
-        that.Requst(this.Action_LoadPublishedSchemaProperty, {
-          CurSchemaCode: that.SheetCode, //当前表单的SchemaCode
-          SchemaCode: schemaCode //关联表单的SchemaCode
-        }, function (data) {
-          that.SchemaProperties[schemaCode] = data.ReturnData.Properties;
-        }, false)
-      }
+      HTTP.getDataItemsByWorkflowCode(schemaCode).then((data)=>{
+        console.log(data);
+        if(data.code==0){
+          // that.SchemaProperties[schemaCode] = data.ReturnData.Properties;
+          var ret =[];
+          // for(var index in data.data.dataItems){
+          //     var tmp ={};
+          //     tmp.Name=data.data.dataItems[index].displayName;
+          //     tmp.DisplayName = data.data.dataItems[index].displayName;
+          //     tmp.DataType= data.data.dataItems[index].controlKey;
+          //     tmp.IsChildField=false;
+          //     tmp.HasOptionValue = false;
+          //     ret.push(tmp);
+          // }
+          data.data.dataItems.forEach((item,index)=>{
+                var tmp ={};
+                tmp.Name=item.displayName;
+                tmp.DisplayName = item.displayName;
+                tmp.DataType= item.controlKey;
+                tmp.IsChildField=false;
+                tmp.HasOptionValue = false;
+                ret.push(tmp);
+          })
+          that.SchemaProperties[schemaCode] = ret;
+        }
+
+      })
+    }
+      // if (!exist) {
+      //   that.Requst(this.Action_LoadPublishedSchemaProperty, {
+      //     CurSchemaCode: that.SheetCode, //当前表单的SchemaCode
+      //     SchemaCode: schemaCode //关联表单的SchemaCode
+      //   }, function (data) {
+      //     that.SchemaProperties[schemaCode] = data.ReturnData.Properties;
+      //   }, false)
+      // }
     },
 
     // 后台请求
@@ -4429,6 +4464,10 @@ window.SheetDesigner = function (sheetCode, ajaxUrl, engineCode, dataLoadedCallb
           }
         }
       });
+      
+
+
+
     }
   };
 

@@ -49,7 +49,7 @@
                                 </dropdownlist>
                             </td>
                             <td>
-                                <span class="icon icon-remove-block" @click="remove(rule)"></span>
+                                <span><Icon type="trash-a" :color="red"  @click="remove(rule)"></Icon></span>
                             </td>
                         </tr>
                     </table>
@@ -170,6 +170,7 @@
     import { Modal} from "iview";
     import dropdownlist from './dropdownlist';
     import {GetDataItemsByWorkflowCode} from '../../service/getData';
+    import HTTP from "../../../../api/form.js"
     export default {
         name:'subinstancedatamap',
         data(){
@@ -325,15 +326,25 @@
                 if(this.$store.state.participant.SubInstanceDataItems[workflowCode]){
                     return ;
                 }
-                let res=await GetDataItemsByWorkflowCode(workflowCode);
-                if(res.Successful){
-                    let result=res.ReturnData.Data;
-                    if(result){
-                        this.childDataItems=result.DataItems;
-                        this.$store.commit('participant/addSubInstanceDataItems',{key:workflowCode,value:result.DataItems});
-                        //this.$store.state.participant.SubInstanceDataItems[workflowCode]=result.DataItems;
+                //let res=await GetDataItemsByWorkflowCode(workflowCode);
+                HTTP.getDataItemsByWorkflowCode(workflowCode).then((res)=>{
+                    if(res.code==0){
+                        let result=res.data.dataItems;
+                        if(result){ 
+                            var ret=[];
+                            for(var i in result){
+                                var tmp={};
+                                tmp.Text=result[i].displayName;
+                                tmp.Value= result[i].controlId;
+                                ret.push(tmp);
+                            }
+                            this.childDataItems=ret;
+                            this.$store.commit('participant/addSubInstanceDataItems',{key:workflowCode,value:ret});
+                            //this.$store.state.participant.SubInstanceDataItems[workflowCode]=result.DataItems;
+                        }
                     }
-                }
+                })
+                
             }
         },
         computed:{

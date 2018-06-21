@@ -274,7 +274,7 @@
                             <div class='property-value priority' >
                                <div class="description" v-show="curActivity">
                                    <span v-if="curActivity && curActivity.ToolTipText==='FillSheet'">{{approveExit=='100%'?'所有':'有'+approveExit}}人提交时进入下一节点</span>
-                                   <!-- <span v-if="curActivity && curActivity.ToolTipText==='Approve'">{{approveExit=='100%'?'所有':'有'+approveExit}}人同意时进入下一节点，有{{disapproveExit}}人不同意时{{disapproveExitActivityName}}</span> -->
+                                   <span v-if="curActivity && curActivity.ToolTipText==='Approve'">{{approveExit=='100%'?'所有':'有'+approveExit}}人同意时进入下一节点，有{{disapproveExit}}人不同意时{{disapproveExitActivityName}}</span>
                                </div>
                                <a href="javascript:;" class="trigger" @click="setActivityRule()">修改规则</a>
                             </div>

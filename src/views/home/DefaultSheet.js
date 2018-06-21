@@ -59,8 +59,11 @@ if(typeof jQuery==="undefined"){throw new Error("jquery-confirm requires jQuery"
  * ========================================================= */
 
 import HTTP from "../../api/form.js"
-import { Message } from "iview";
+import { Message,Modal } from "iview";
 import axios from "axios";
+import API from "../../api/work-flow.js"
+import openModal from "./assoModal.vue"
+
 
 (function (factory) {
     if (typeof define === 'function' && define.amd)
@@ -6942,10 +6945,10 @@ jQuery.extend({
                 });
         },
         CloseAllModal: function () {
-            for (var i = top.$.IDialogModal.DialogModalArray.length - 1; i >= 0; i--) {
-                this.Close(top.$.IDialogModal.DialogModalArray[i].ContainerId);
-            }
-            top.$.IDialogModal.DialogModalArray = [];
+            // for (var i = top.$.IDialogModal.DialogModalArray.length - 1; i >= 0; i--) {
+            //     this.Close(top.$.IDialogModal.DialogModalArray[i].ContainerId);
+            // }
+            // top.$.IDialogModal.DialogModalArray = [];
         },
         //手工关闭
         Close: function (ModalId) {
@@ -7318,10 +7321,10 @@ jQuery.extend({
         },
 
         CloseAllModal: function () {
-            for (var i = top.$.ISideModal.ModalIdArray.length - 1; i >= 0; i--) {
-                this.Close(top.$.ISideModal.ModalIdArray[i]);
-            }
-            top.$.ISideModal.ModalIdArray = [];
+            // for (var i = top.$.ISideModal.ModalIdArray.length - 1; i >= 0; i--) {
+            //     this.Close(top.$.ISideModal.ModalIdArray[i]);
+            // }
+            // top.$.ISideModal.ModalIdArray = [];
         },
 
         //自动关闭
@@ -25891,13 +25894,17 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                 that._Render();
             }
             else {
-                var postData = { PostData: JSON.stringify({ ActionName: "LoadSchemaAcl", SchemaCode: that.BOSchemaCode }) }
-                that.Ajax("/Form/OnAction", "GET", postData, function (data) {
-                    $.FormQueryData[that.BOSchemaCode] = data.ReturnData;
-                    that.IsRunnable = data.ReturnData.IsRunnable;
-                    that.CanCreate = data.ReturnData.CanCreate;
-                    that._Render();
-                }, false);
+                // var postData = { PostData: JSON.stringify({ ActionName: "LoadSchemaAcl", SchemaCode: that.BOSchemaCode }) }
+                // that.Ajax("/Form/OnAction", "GET", postData, function (data) {
+                //     $.FormQueryData[that.BOSchemaCode] = data.ReturnData;
+                //     that.IsRunnable = data.ReturnData.IsRunnable;
+                //     that.CanCreate = data.ReturnData.CanCreate;
+                //     that._Render();
+                // }, false);
+                $.FormQueryData[that.BOSchemaCode] = {"CanCreate":true,"IsRunnable":true};
+                that.IsRunnable = true;
+                that.CanCreate = true;
+                that._Render();
             }
 
         },
@@ -26092,12 +26099,18 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
             //初始渲染时候不要执行，只有在点击过关联表单控件后才能执行以下请求。
             //原因是在子表中打开时候会很慢
             if (!that.FirstLoad) {
-                that.Ajax('/App/OnAction', 'GET', { PostData: JSON.stringify(defaultParams) }, function (data) {
-                    if (data.Successful) {
-                        that.LoadData = data.ReturnData.Response.ReturnData;
-                        that._bindDataToDropDown(needClear, data.ReturnData.Response.ReturnData);
+                HTTP.appRunPage(that.BOSchemaCode).then((data)=>{
+                    if (data.code==0) {
+                        that.LoadData = data.result.ReturnData;
+                        that._bindDataToDropDown(needClear, that.LoadData);
                     }
-                }, true);
+                })
+                // that.Ajax('/App/OnAction', 'GET', { PostData: JSON.stringify(defaultParams) }, function (data) {
+                //     if (data.Successful) {
+                //         that.LoadData = data.ReturnData.Response.ReturnData;
+                //         that._bindDataToDropDown(needClear, data.ReturnData.Response.ReturnData);
+                //     }
+                // }, true);
             }
         },
         //绑定过滤的数据到下拉框
@@ -26551,9 +26564,9 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                         QueryCode: that.BOSchemaCode,
                         flag: $.IGuid()
                     }
-
-                    that.Ajax("/App/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
-                        if (data.ReturnData.Response.Columns.length == 0 && data.ReturnData.QueryItems.length == 0) {
+                    
+                    HTTP.appRunPage(that.BOSchemaCode).then((data)=>{
+                        if (data.result.Columns.length == 0 && data.ReturnData.QueryItems.length == 0) {
                             $(currModal).modal("hide");
                             //$.IShowError("没有设置可用列！");
                             Message.error({
@@ -26577,7 +26590,36 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                             that._setRowChecked();
                         }
                         that.afterTableInit();
-                    });
+                    })
+
+
+
+                    // that.Ajax("/App/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
+                    //     if (data.ReturnData.Response.Columns.length == 0 && data.ReturnData.QueryItems.length == 0) {
+                    //         $(currModal).modal("hide");
+                    //         //$.IShowError("没有设置可用列！");
+                    //         Message.error({
+                    //             content:"没有设置可用列！",
+                    //             duration: 3
+                    //         });
+                    //         return;
+                    //     }
+                    //     //$.FormQueryData.PropertyQueryColumns[that.BOSchemaCode] = data.ReturnData.Response.Columns;
+                    //     $.FormQueryData.PropertyQueryColumns[that.BOSchemaCode] = data.ReturnData.SortedColumns;
+                    //     //调整initSearchParams位置为initTable之前，原因是在关联列表中初始时候searchform是空
+                    //     $.FormQueryData.PropertyQueryItems[that.BOSchemaCode] = data.ReturnData.QueryItems;
+                    //     $.FormQueryData.PropertyQueryDefaultValues[that.BOSchemaCode] = JSON.parse(data.ReturnData.QueryDefaultValues);
+                    //     if (!that.SearchInitialized) {
+                    //         that._initSearchParams(data.ReturnData.QueryItems, $.FormQueryData.PropertyQueryDefaultValues[that.BOSchemaCode]);
+                    //     }
+
+                    //     if (!that.TableInitialized || that.TableNeedRefresh) {
+                    //         that._initTable($.FormQueryData.PropertyQueryColumns[that.BOSchemaCode]);//合并表头
+                    //     } else {
+                    //         that._setRowChecked();
+                    //     }
+                    //     that.afterTableInit();
+                    // });
                 }
                 else {
                     if (!that.TableInitialized || that.TableNeedRefresh) {
@@ -26605,16 +26647,27 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                         SchemaCode: that.BOSchemaCode,
                         flag: $.IGuid()
                     }
-                    that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
-                        if (data.Successful) {
+
+                    HTTP.getBizObjectSchemaDisplayName(that.BOSchemaCode).then((data)=>{
+                        if (data.code==0) {
                             var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&SheetQueryField=" + that.DataField;
                             if (that.BizObjectId) {
                                 url += "&SheetQueryRowId=" + that.BizObjectId;
                             }
                             that.$modal.modal("hide");
-                            $.ISideModal.Show(url, data.ReturnData.DisplayName);
+                            $.ISideModal.Show(url, data.data.DisplayName);
                         }
-                    });
+                    })
+                    // that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
+                    //     if (data.Successful) {
+                    //         var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&SheetQueryField=" + that.DataField;
+                    //         if (that.BizObjectId) {
+                    //             url += "&SheetQueryRowId=" + that.BizObjectId;
+                    //         }
+                    //         that.$modal.modal("hide");
+                    //         $.ISideModal.Show(url, data.ReturnData.DisplayName);
+                    //     }
+                    // });
                 });
             }
             else {
@@ -28166,10 +28219,35 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                             var params = {
                                 ActionName: "GetBizObjectSchemaDisplayName", SchemaCode: that.BOSchemaCode, flag: $.IGuid()
                             }
-                            that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
-                                var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + boId + "&Mode=View";
-                                $.ISideModal.Show(url, data.ReturnData.DisplayName);
-                            });
+
+                            HTTP.getBizObjectSchemaDisplayName(that.BOSchemaCode).then((data)=>{
+                                if (data.code==0) {
+                                    var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + boId + "&Mode=View";
+                                    // $.ISideModal.Show(url,data.data.DisplayName);
+                                    Modal.confirm({
+                                        //scrollable:true,
+                                        okText:'确定',
+                                        width:"1200px",
+                                        render: (h) => {
+                                            return h(openModal, {
+                                                props: {
+                                                    code:that.BOSchemaCode
+                                                },
+                                                on: {
+                                                   
+                                                }
+                                            })
+                                        },
+                                        onOk: () => {
+                                        
+                                        }                        
+                                    })
+                                }
+                            })
+                            // that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
+                            //     var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + boId + "&Mode=View";
+                            //     $.ISideModal.Show(url, data.ReturnData.DisplayName);
+                            // });
                         }
                     });
                 }
@@ -28511,11 +28589,17 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                             SchemaCode: this.BOSchemaCode,
                             ObjectId: ObjectId
                         }
-                        this.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
-                            if (data.ReturnData.ListViewData && data.ReturnData.ListViewData.length > 0) {
-                                that.SetMappingValue(data.ReturnData.ListViewData[0]);
-                            }
-                        });
+                        // this.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
+                        //     if (data.ReturnData.ListViewData && data.ReturnData.ListViewData.length > 0) {
+                        //         that.SetMappingValue(data.ReturnData.ListViewData[0]);
+                        //     }
+                        // });
+                        var params ={
+                            busId: params.id,
+                            appId: params.appId,
+                            ruWfTaskId: params.ruWfTaskId,
+                        }
+
                     } else {
                         //清空关联配置值
                         this.ClearMappingValue();
@@ -29839,16 +29923,29 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                         SchemaCode: that.BOSchemaCode,
                         flag: $.IGuid()
                     }
-                    that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
-                        if (data.Successful) {
+                    HTTP.getBizObjectSchemaDisplayName(that.BOSchemaCode).then((data)=>{
+                        if (data.code==0) {
                             var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&SheetQueryField=" + that.DataField;
                             if (that.BizObjectId) {
                                 url += "&SheetQueryRowId=" + that.BizObjectId;
                             }
                             that.$modal.modal("hide");
-                            $.ISideModal.Show(url, data.ReturnData.DisplayName);
+                            $.ISideModal.Show(url, data.data.DisplayName);
                         }
-                    });
+                    })
+
+
+
+                    // that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
+                    //     if (data.Successful) {
+                    //         var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&SheetQueryField=" + that.DataField;
+                    //         if (that.BizObjectId) {
+                    //             url += "&SheetQueryRowId=" + that.BizObjectId;
+                    //         }
+                    //         that.$modal.modal("hide");
+                    //         $.ISideModal.Show(url, data.ReturnData.DisplayName);
+                    //     }
+                    // });
                 });
             } else {
                 $btnAdd.addClass("hide");
@@ -31125,10 +31222,16 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                             SchemaCode: that.BOSchemaCode,
                             flag: $.IGuid()
                         }
-                        that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
-                            var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + objectId + "&Mode=View";
-                            $.ISideModal.Show(url, data.ReturnData.DisplayName);
-                        });
+                        HTTP.getBizObjectSchemaDisplayName(that.BOSchemaCode).then((data)=>{
+                            if (data.code==0) {
+                                var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + objectId + "&Mode=View";
+                                $.ISideModal.Show(url, data.data.DisplayName);
+                            }
+                        })
+                        // that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
+                        //     var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + objectId + "&Mode=View";
+                        //     $.ISideModal.Show(url, data.ReturnData.DisplayName);
+                        // });
                     }
                 });
             }
@@ -31359,10 +31462,16 @@ $.Buttons.More.Inherit($.Buttons.BaseButton, {
                                         SchemaCode: that.BOSchemaCode,
                                         flag: $.IGuid()
                                     }
-                                    that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
-                                        var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + objectId + "&Mode=View";
-                                        $.ISideModal.Show(url, data.ReturnData.DisplayName);
-                                    });
+                                    HTTP.getBizObjectSchemaDisplayName(that.BOSchemaCode).then((data)=>{
+                                        if (data.code==0) {
+                                            var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + objectId + "&Mode=View";
+                                            $.ISideModal.Show(url, data.data.DisplayName);
+                                        }
+                                    })
+                                    // that.Ajax("/Form/OnAction", "GET", { PostData: JSON.stringify(params) }, function (data) {
+                                    //     var url = "/Form/DefaultSheet?SchemaCode=" + that.BOSchemaCode + "&BizObjectId=" + objectId + "&Mode=View";
+                                    //     $.ISideModal.Show(url, data.ReturnData.DisplayName);
+                                    // });
                                 }
                             });
                         }

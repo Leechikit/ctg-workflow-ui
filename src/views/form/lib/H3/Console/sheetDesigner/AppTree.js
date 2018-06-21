@@ -379,54 +379,22 @@ var AppTree = (function ($) {
             if (config.root.expand) {
                 //初始展开需先异步加载
                 var that = this;
-                $.ajax({
-                    url: config.url,
-                    dataType: 'json',
-                    data: {
-                        "id": config.root.appCode,
-                        'NodeType': config.root.nodeType,
-                        "Command": config.command,
-                        "ShowUnitSelectionRange": config.showUnitSelectionRange,
-                        "ShowSystem": config.showSystem,
-                        "ShowSystemEN": config.showSystemEN,
-                        "ShowSubSheet": config.showSubSheet,
-                        "ShowAssociation": config.showAssociation,
-                        'ShowField': config.showField,
-                        'ShowOrganization': config.showOrganization,
-                        'ShowPost': config.showPost,
-                        'ShowRules': config.showRules,
-                        'ShowFunctions': config.showFunction,
-                        'ShowConst': config.showConst,
-                        'ShowBizProperties': config.showBizProperties,//暂定需要根据根节点设置来判断是否显示
-                        'ShowSubSheetField': config.showSubSheetField,
-                        'ShowAssociationField': config.showAssociationField,
-                        'ShowOnlyParticipant': config.showOnlyParticipant,
-                        'ShowSheetAssociation': config.showSheetAssociation,
-                        'ShowWorkflow': config.showWorkflow,
-                        'ShowWorkflowSystemField': config.showWorkflowSystemField,
-                        'CurSheetCode': config.curSheetCode,
-                        'ShowCheckBox': config.showCheckbox,
-                        'CanCheckTypes': config.canCheckTypes.join(','),
-                        "FirstLoad": true,
-                        'ExcludeCodes': config.excludeCodes.join(','),
-                        'ExcludeFields': config.excludeFields.join(','),
-                        'FormulaType': config.formulaType
-                    },
-                    type: 'POST',
-                    success: function (data) {
+
+                HTTP.appList(config.root.appCode)
+                    .then(res => {
                         if (data != null && data.Successful) {
-                            var childNodes = data.ReturnData['ChildNodes'];
+                            var childNodes = data.page.result;
                             for (var i = 0, len = childNodes.length; i < len; i++) {
                                 var node = {
                                     id: childNodes[i].id,
-                                    pId: childNodes[i].pId,
-                                    name: childNodes[i].name,
+                                    pId: config.root.appCode,
+                                    name: childNodes[i].appName,
                                     open: false,
-                                    Code: childNodes[i].Code,
+                                    Code: childNodes[i].id,
                                     NodeType: childNodes[i].NodeType,
-                                    iconSkin: childNodes[i].iconSkin,
-                                    isParent: childNodes[i].isParent,
-                                    nocheck: childNodes[i].nocheck
+                                    iconSkin: "",
+                                    isParent: true,
+                                    nocheck: false
                                 };
                                 znodes.push(node);
                             }
@@ -438,8 +406,17 @@ var AppTree = (function ($) {
                         } else {
                             console.error(data.ErrorMessage);
                         }
-                    }
+
+                    })
+                    .catch(err => {
+                        this.$Message.error('This is an error')
+                    }).finally(()=>{
+                    this.getLoading=false;
                 })
+
+
+
+
                 return;
             }
         } else if (config.customCodes.length > 0) {

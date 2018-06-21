@@ -381,7 +381,7 @@ div.search-wrapper>.form-search span.search-btn {
                                 </div>
                                 <div class="box-recent-operate">
                                     <span v-if="checkPerm(['act:deal:start:'+item.appKey])" class="xinzengshuju " @click="showRender(item.id,item.appName);">新增</span>
-                                    <!-- <span v-if="!checkPerm(['act:deal:start:'+item.appKey])" class="xinzengshuju " >    </span> -->
+                                    <span v-if="!checkPerm(['act:deal:start:'+item.appKey])" class="xinzengshuju " >    </span>
                                     |
                                     <span class="chakanliebiao "@click="showApp(item.moduleId,item.appName,item.id,item.appKey)" >查看</span>
                                 </div>

@@ -80,7 +80,7 @@
                 },
                 props:['code'],
                 mounted () {
-                        var OwnerDeptId_Name;
+                    var OwnerDeptId_Name;
                     var requestData = {};
                     var engineCode = "m83njcbr1kp2u5fzno9ikccl5";
                     $.SheetRuntimeContentCache.Init(engineCode);
@@ -103,6 +103,9 @@
                     requestData["TimeStamp"] = timeStamp;
                     //显示在Modal框中,工具栏显示到底部
                     var showInModal = $.IQuery("ShowInModal") || $.IQuery("showinmodal") || $.IQuery("showInmodal") || "";
+
+
+                    
 
 
                     $(function () {

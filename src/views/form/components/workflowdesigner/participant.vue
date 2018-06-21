@@ -236,7 +236,7 @@
                         let node = {
                             NodeType: NodeType.Unit,
                             id: item.substring(2,item.length-1),
-                            userName: showName,
+                            name: showName,
                             UnitType: 8
                         }
                         this.$store.state.participant.SelectedParticipants.push(node);

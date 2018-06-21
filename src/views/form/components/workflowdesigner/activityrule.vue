@@ -26,7 +26,7 @@
                         <span v-else>同意时进入下一节点</span>
                     </td>
                 </tr>
-                <!-- <tr v-if="activity && activity.ToolTipText==='Approve'">
+                <tr v-if="activity && activity.ToolTipText==='Approve'">
                     <td>
                         <dropdownlist 
                         :width="ruleWidth"
@@ -41,7 +41,7 @@
                         </dropdownlist>
                     </td>
                     <td>
-                        <input type="text" @keyup="disApproveRuleValidate($event)" :placeholder="disApproveInputPlaceHolder" v-model="disapproveNumber"/>
+                        <input type="text" disabled="true" @keyup="disApproveRuleValidate($event)" :placeholder="disApproveInputPlaceHolder" v-model="disapproveNumber"/>
                     </td>
                     <td>
                         <span>不同意时</span>
@@ -71,7 +71,7 @@
                         @update="val=>nodeSelectActivityCode=val">
                         </dropdownlist>
                     </td>
-                </tr> -->
+                </tr>
             </table>
         </div>
     </div>
@@ -116,11 +116,8 @@
                     Text: '按人数'
                 }],
                 nodeSelectSource: [{
-                        Value:0,
-                        Text: '驳回到第一个经办节点'
-                    },{
                         Value:1,
-                        Text: '驳回到前一个经办节点'
+                        Text: '驳回到发起人'
                     },{
                         Value:2,
                         Text: '驳回到指定节点'

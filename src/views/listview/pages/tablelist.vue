@@ -253,49 +253,49 @@ export default {
             "type": 0,
             "isChildSchema": false,
             "isVisible": true,
-            "canSort": false
+            "Sortable": false
         }, {
             "name": "创建人",
             "id": "1",
             "type": 0,
             "isChildSchema": false,
             "isVisible": true,
-            "canSort": true
+            "Sortable": true
         },{
             "name": "拥有者",
             "id": "2",
             "type": 0,
             "isChildSchema": false,
             "isVisible": false,
-            "canSort": false
+            "Sortable": false
         },{
             "name": "子表",
             "id": "3",
             "type": 0,
             "isChildSchema": true,
             "isVisible": true,
-            "canSort": false,
+            "Sortable": false,
             "children": [{
                 "name": "数字1",
                 "id": "31",
                 "parentId": "3",
                 "type": 0,
                 "isVisible": true,
-                "canSort": true
+                "Sortable": true
             },{
                 "name": "数字2",
                 "id": "32",
                 "parentId": "3",
                 "type": 0,
                 "isVisible": true,
-                "canSort": true
+                "Sortable": true
             },{
                 "name": "数字3",
                 "id": "33",
                 "parentId": "3",
                 "type": 0,
                 "isVisible": true,
-                "canSort": true
+                "Sortable": true
             }]
         },{
             "name": "部分",
@@ -303,42 +303,42 @@ export default {
             "type": 0,
             "isChildSchema": false,
             "isVisible": true,
-            "canSort": true
+            "Sortable": true
         },{
             "name": "顶顶顶",
             "id": "5",
             "type": 0,
             "isChildSchema": false,
             "isVisible": true,
-            "canSort": false
+            "Sortable": false
         },{
             "name": "子表2",
             "id": "6",
             "type": 0,
             "isChildSchema": true,
             "isVisible": true,
-            "canSort": false,
+            "Sortable": false,
             "children": [{
                 "name": "数字2",
                 "id": "61",
                 "parentId": "6",
                 "type": 0,
                 "isVisible": true,
-                "canSort": true
+                "Sortable": true
             },{
                 "name": "数字2",
                 "id": "62",
                 "parentId": "6",
                 "type": 0,
                 "isVisible": true,
-                "canSort": true
+                "Sortable": true
             },{
                 "name": "数字3",
                 "id": "63",
                 "parentId": "6",
                 "type": 0,
                 "isVisible": true,
-                "canSort": true
+                "Sortable": true
             }]
         }]
     }

@@ -34,9 +34,9 @@
 </template>
 <script>
 import { Modal } from "iview";
-import openModal from "@/views/home/assoModal.vue"
+import openModal from "@/views/home/assoModal.vue";
 export default {
-  props: ["listData", "tableData","isLoading"],
+  props: ["listData", "tableData", "isLoading"],
   data() {
     return {
       self: this,
@@ -50,7 +50,14 @@ export default {
     // 表格表头
     tableColumns() {
       const that = this;
-      let tableArrs = [];
+      let tableArrs = [
+        {
+          type: "index",
+          width: 60,
+          align: "center",
+          fixed: "left"
+        }
+      ];
       this.listDataMap.forEach(item => {
         let obj = [];
         if (item.isChildSchema) {
@@ -99,24 +106,20 @@ export default {
                   on: {
                     click() {
                       Modal.info({
-                          //scrollable:true,
-                          title: params.row.Name,
-                          width:"800px",
-                          render: (h) => {
-                              return h(openModal, {
-                                  props: {
-                                      code:params.row.ObjectId
-                                  },
-                                  on: {
-                                      
-                                  }
-                              })
-                          },
-                          onOk: () => {
-                          
-                          }                        
-                      })
-                      console.log(params.row.ObjectId)
+                        //scrollable:true,
+                        title: params.row.Name,
+                        width: "800px",
+                        render: h => {
+                          return h(openModal, {
+                            props: {
+                              code: params.row.ObjectId
+                            },
+                            on: {}
+                          });
+                        },
+                        onOk: () => {}
+                      });
+                      console.log(params.row.ObjectId);
                     }
                   }
                 },
@@ -217,6 +220,23 @@ export default {
   }
   .listview-table {
     flex-grow: 1;
+    .ivu-table-wrapper {
+      border: none;
+    }
+    .ivu-table:after {
+      display: none;
+    }
+    .ivu-table-body {
+      .ivu-table-column-center {
+        border: none;
+      }
+    }
+    .ivu-table-border td,
+    .ivu-table-border th {
+      &:last-child {
+        border-right: none;
+      }
+    }
   }
   .table-page {
     height: 45px;
@@ -304,22 +324,6 @@ export default {
       white-space: nowrap;
       color: #333333;
     }
-  }
-  .ivu-table-wrapper{
-    border: none;
-  }
-  .ivu-table:after{
-    display: none;
-  }
-  .ivu-table-body{
-    .ivu-table-column-center{
-      border: none;
-    }
-  }
-  .ivu-table-border td, .ivu-table-border th {
-      &:last-child{
-        border-right: none;
-      }
   }
 }
 .list-page {

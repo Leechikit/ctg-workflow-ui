@@ -81,9 +81,8 @@
                   </div>
                 </div>
 
-                <div class="propertyContent" style="overflow:inherit;">
+                <!-- <div class="propertyContent" style="overflow:inherit;">
                   <ul class="ColumnList">
-                    <!-- @*todo:子表业务逻辑*@ -->
                     <li style="display:none;">
                       <div class="input-group">
                         <span class="input-group-addon">默认维度</span>
@@ -144,12 +143,12 @@
                       </span>
                     </li>
                   </ul>
-                </div>
+                </div> -->
               </div>
 
               <div class="input-group" style="width: 100%;">
                 <!--批量操作-->
-                <div id="SelectableContainer" v-show="showModePropertyIndex==0||showModePropertyIndex==1" style="padding-bottom: 16px;">
+                <!-- <div id="SelectableContainer" v-show="showModePropertyIndex==0||showModePropertyIndex==1" style="padding-bottom: 16px;">
                   <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left; position:relative;display:block;">批量操作
                     <i data-tip="设置员工是否允许批量操作或处理权限范围内的数据" class="icon-tooltip icon-tips"></i>
                   </span>
@@ -163,7 +162,7 @@
                       <label for="SelectionVisibleNo" style="padding:0px;">不允许</label>
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <div id="listSetting" v-show="showModePropertyIndex==0">
                   <div>
                     <!--子表展示-->
@@ -171,37 +170,38 @@
                       <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left;display:block;position:relative;">默认显示子表
                         <i data-tip="选择的子表可在打开列表时直接进行展示" class="icon-tooltip icon-tips"></i>
                       </span>
+                      <RadioGroup v-model="IsChild" size="large">
+                          <Radio label="显示"></Radio>
+                          <Radio label="隐藏"></Radio>
+                      </RadioGroup>
                     </div>
                   </div>
                   <div>
                     <!--排序字段-->
                     <div id="SelectionSortBy" class="input-group mb15" style="width: 100%;">
                       <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left; display:block;">排序字段</span>
+                      <Select v-model="sortItem" style="width:200px">
+                          <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                      </Select>
                     </div>
                   </div>
                   <div>
                     <!--排序方式-->
                     <div class="input-group" style="width: 100%;padding-top: 16px;padding-bottom: 16px;border-top: 1px solid #E1E1E1;">
                       <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left;display:block;">排序方式</span>
-                      <div class="form-control" style="border:0;">
-                        <div class="rdio rdio-primary" style="width:50%;float:left;">
-                          <input type="radio" name="SelectionSortType" id="SelectionSortD" value="1">
-                          <label for="SelectionSortD" style="padding:0px;">降序</label>
-                        </div>
-                        <div class="rdio rdio-primary" style="width: 50%; float: left;">
-                          <input type="radio" name="SelectionSortType" id="SelectionSortU" value="0">
-                          <label for="SelectionSortU" style="padding:0px;">升序</label>
-                        </div>
-                      </div>
+                      <RadioGroup v-model="order" size="large">
+                          <Radio label="升序"></Radio>
+                          <Radio label="降序"></Radio>
+                      </RadioGroup>
                     </div>
                   </div>
                   <div>
                     <!--列表图片-->
-                    <div id="SelectionIcon" class="input-group mb15" style="width: 100%;padding-bottom: 16px;">
+                    <!-- <div id="SelectionIcon" class="input-group mb15" style="width: 100%;padding-bottom: 16px;">
                       <span class="input-group-addon" style="border:0; background-color:#fff;width:100px;text-align:left;position:relative; display:block;margin-bottom: 8px;">列表图片
                         <i data-tip="选择后，在移动端列表可以显示图片控件中的图片，多张的情况下只显示第一张" class="icon-tooltip icon-tips"></i>
                       </span>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div id="calendarSetting" v-show="showModePropertyIndex==1">
@@ -243,14 +243,14 @@
                 </div>
               </div>
 
-              <div id="ActionBtn" class="action-v">
+              <!-- <div id="ActionBtn" class="action-v">
                 <div style="padding-top: 16px;border-top: 1px solid #E1E1E1;">
                   <span class="input-group-addon titletxt" style="margin-bottom:8px;">功能按钮</span>
                   <div class="form-control" style="width:98%;">
                     <a>设置功能按钮</a>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- @*列表操作*@ -->
               <div id="ActionPanle" style="display:none;height:100%">
                 <div class="propertyContent">
@@ -270,7 +270,7 @@
     <i-col span="5"  class="flex-left">
       <div id="left-box"  class="col-left">
         <div class="tab-content">
-          <div class="item-title">查询条件</div>
+          <div class="item-title">查询条件<div class="btn-save"><Button type="primary" size="small" @click="saveList">保存</Button></div></div>
           <div id="DesignerQueryItems" class="DesignerView">
           </div>
           <div>
@@ -280,7 +280,7 @@
                     <Table border :columns="tableColumns" :data="tableDatas" :stripe="true"></Table>
                   </div>
                   <div id="TablePageIndex" class="table-page">
-                    <Page class-name="list-page" :current="pageNum" :total="total" :show-elevator="true" show-sizer show-total @on-change="changePageNum" @on-page-size-change="changePageSize"></Page>
+                    <Page class-name="list-page" :current="1" :total="50" :show-elevator="true" show-sizer show-total></Page>
                 </div>
             </div>
           </div>
@@ -292,105 +292,155 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
+import draggable from "vuedraggable";
 export default {
-  components:{
+  components: {
     draggable
   },
-  props: ["listData"],
+  props: ["listData", "tableData"],
   data() {
     return {
-      listDataMap: this.listData, // 数据映射
+      listDataMap: this.listData.filter(item => item.id != "Name"), // 数据映射
+      sortItem: null,
+      IsChild: "显示",
+      order: "升序",
       showQueryContent: true,
       showColumnContent: true,
       showModePropertyIndex: 0 //0 列表  1 日历  2 时间轴
     };
   },
-  computed:{
+  computed: {
     // 拖拽
-    dragData:{
-      get(){
+    dragData: {
+      get() {
         return this.listDataMap;
       },
-      set(val){
-        return this.listDataMap = val;
+      set(val) {
+        return (this.listDataMap = val);
       }
     },
     // 全选
-    allSelected(){
+    allSelected() {
       let result = true;
-      for(let i = 0,len = this.listDataMap.length;i<len;i++){
-        if(!this.listDataMap[i].isVisible){
+      for (let i = 0, len = this.listDataMap.length; i < len; i++) {
+        if (!this.listDataMap[i].isVisible) {
           result = false;
           break;
         }
       }
       return result;
     },
+    // 排序列表
+    sortList() {
+      let arrs = [];
+      this.listDataMap.forEach(item => {
+        if (item.Sortable) {
+          arrs.push({
+            value: item.id,
+            label: item.name
+          });
+        }
+      });
+      return arrs;
+    },
     // 表格表头
-    tableColumns(){
-      let tableArrs = [];
-      this.listDataMap.forEach(item=>{
+    tableColumns() {
+      let tableArrs = [
+        {
+          title: "数据标题",
+          key: "Name",
+          align: "center",
+          minWidth: 100
+        }
+      ];
+      this.listDataMap.forEach(item => {
         let obj = [];
-        if(item.isChildSchema){
+        if (item.isChildSchema) {
           let isEmpty = true;
-          for(let i = 0,len = item.children.length;i<len;i++){
-            if(item.children[i].isVisible){
+          for (let i = 0, len = item.children.length; i < len; i++) {
+            if (item.children[i].isVisible) {
               isEmpty = false;
-              break;              
+              break;
             }
           }
-          if(!isEmpty){
+          if (!isEmpty) {
             obj = {
-                title: item.name,
-                key: item.id,
-                align: 'center',
-                children: []
-            }
-            item.children.forEach(child=>{
-              if(child.isVisible){
+              title: item.name,
+              key: item.id,
+              align: "center",
+              children: []
+            };
+            item.children.forEach(child => {
+              if (child.isVisible) {
                 obj.children.push({
-                    title: child.name,
-                    key: child.id,
-                    align: 'center'
+                  title: child.name,
+                  key: child.id,
+                  align: "center",
+                  minWidth: 100
                 });
               }
             });
             tableArrs.push(obj);
           }
-        }else if(item.isVisible){
+        } else if (item.isVisible) {
           obj = {
-              title: item.name,
-              key: item.id,
-              align: 'center'
-          }
+            title: item.name,
+            key: item.id,
+            align: "center",
+            minWidth: 100
+          };
           tableArrs.push(obj);
         }
       });
-      console.log(tableArrs);
+      return tableArrs;
+    },
+    // 表格数据
+    tableDatas() {
+      let tableArrs = [];
+      this.tableData.forEach(item => {
+        let obj = {};
+        for (let key in item) {
+          const arrs = key.split(".");
+          if (arrs.length > 1) {
+            obj[arrs[1]] = item[key];
+          } else {
+            obj[arrs[0]] = item[key];
+          }
+        }
+        tableArrs.push(obj);
+      });
       return tableArrs;
     }
   },
-  created(){
-      console.log(this.tableColumns);
+  created() {},
+  mounted() {
+    var s = document.body.clientHeight - 95;
+    $("#DesignerZone").css({ height: s + "px" });
+    $(window).resize(function() {
+      s = document.body.clientHeight - 95; //当浏览器大小变化时
+      $("#DesignerZone").css({ height: s + "px" });
+    });
   },
   methods: {
-    togglePropertyContent() {},
+    // 保存列表
+    saveList() {
+      console.log("保存列表");
+    },
     // 全选
-    selectAllClick(isAllVisible){
-      this.listDataMap.forEach((item,index)=>{
+    selectAllClick(isAllVisible) {
+      this.listDataMap.forEach((item, index) => {
         item.isVisible = !isAllVisible;
         this.$set(this.listDataMap, index, item);
-        if(item.isChildSchema){
-          this.selectChildrenAllClick(item.id,isAllVisible);
+        if (item.isChildSchema) {
+          this.selectChildrenAllClick(item.id, isAllVisible);
         }
       });
     },
     // 子表全选
-    selectChildrenAllClick(id,isAllVisible){
-      this.listDataMap.forEach((item, index)=>{
-        if(item.isChildSchema && item.id == id){
-          item.children.forEach((child, childIndex)=>{
+    selectChildrenAllClick(id, isAllVisible) {
+      this.listDataMap.forEach((item, index) => {
+        if (item.isChildSchema && item.id == id) {
+          item.children.forEach((child, childIndex) => {
             item.children[childIndex].isVisible = !isAllVisible;
           });
           this.$set(this.listDataMap, index, item);
@@ -398,22 +448,22 @@ export default {
       });
     },
     // 子表选项点击
-    childSchemaClick(parentId){
-      setTimeout(()=>{
-        this.listDataMap.forEach((item, index)=>{
-          if(item.isChildSchema && item.id == parentId){
+    childSchemaClick(parentId) {
+      setTimeout(() => {
+        this.listDataMap.forEach((item, index) => {
+          if (item.isChildSchema && item.id == parentId) {
             let result = true;
-            for(let i=0,len=item.children.length;i<len;i++){
-              if(!item.children[i].isVisible){
+            for (let i = 0, len = item.children.length; i < len; i++) {
+              if (!item.children[i].isVisible) {
                 result = false;
                 break;
               }
             }
-            item.isVisible = result;          
+            item.isVisible = result;
             this.$set(this.listDataMap, index, item);
           }
         });
-      },0);
+      }, 0);
     }
   }
 };
@@ -459,24 +509,25 @@ li.select-all-child {
       margin-right: 302px;
       display: block;
       float: none;
-      width:auto !important;
+      width: auto !important;
     }
 
     .flex-right {
       width: 300px;
       background: #fff;
       border-radius: 2px;
-      float:right;
+      float: right;
     }
   }
 
-  .ivu-row, .ivu-col {
+  .ivu-row,
+  .ivu-col {
     height: 100%;
   }
 
   .col-left {
     height: 100%;
-    box-shadow: 0 2px 4px 0 #E5EDFC;
+    box-shadow: 0 2px 4px 0 #e5edfc;
     border-radius: 2px;
     overflow-y: auto;
 
@@ -490,19 +541,25 @@ li.select-all-child {
     }
 
     .item-title {
+      position: relative;
       height: 30px;
       line-height: 30px;
       padding-left: 15px;
       font-size: 14px;
       font-weight: 600;
       color: #000000;
+      .btn-save {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
 
     .formlistTimeline {
       overflow: hidden;
     }
 
-    .bootstrap-table{
+    .bootstrap-table {
       padding: 0 15px 0 0;
     }
   }
@@ -529,12 +586,13 @@ li.select-all-child {
           padding: 0;
         }
 
-        .ivu-tabs-nav-prev, .ivu-tabs-nav-next {
+        .ivu-tabs-nav-prev,
+        .ivu-tabs-nav-next {
           display: none;
         }
 
         .ivu-tabs-ink-bar {
-          background-color: #2D7FFF;
+          background-color: #2d7fff;
           height: 3px;
         }
 
@@ -544,7 +602,7 @@ li.select-all-child {
         }
 
         .ivu-tabs-tab-active {
-          color: #2D7FFF;
+          color: #2d7fff;
         }
       }
     }
@@ -581,7 +639,7 @@ li.select-all-child {
                   width: 14px;
                   height: 14px;
                   font-size: 14px;
-                  color: #2D7FFF;
+                  color: #2d7fff;
                 }
               }
             }
@@ -596,9 +654,9 @@ li.select-all-child {
                 padding: 0px;
 
                 .ColumnItem {
-                    padding-left: 10px;
+                  padding-left: 10px;
                   padding-right: 0;
-                  margin-bottom: 2px;
+                  margin: 0 !important;
                   list-style: none;
                   min-height: 30px;
                   line-height: 30px;
@@ -669,24 +727,25 @@ li.select-all-child {
     }
   }
 
-  #DesignerView{
+  #DesignerView {
     .listview-table {
       flex-grow: 1;
-      .ivu-table-wrapper{
+      .ivu-table-wrapper {
         border: none;
       }
-      .ivu-table:after{
+      .ivu-table:after {
         display: none;
       }
-      .ivu-table-body{
-        .ivu-table-column-center{
+      .ivu-table-body {
+        .ivu-table-column-center {
           border: none;
         }
       }
-      .ivu-table-border td, .ivu-table-border th {
-          &:last-child{
-            border-right: none;
-          }
+      .ivu-table-border td,
+      .ivu-table-border th {
+        &:last-child {
+          border-right: none;
+        }
       }
     }
     .table-page {
@@ -781,7 +840,7 @@ li.select-all-child {
   #DesignerQueryItems {
     background-color: #fff;
     overflow: hidden;
-    border: 1px solid #E1E1E1;
+    border: 1px solid #e1e1e1;
     border-radius: 2px;
 
     .form-group {
@@ -820,7 +879,7 @@ li.select-all-child {
         font-weight: normal;
         overflow: hidden;
         white-space: nowrap;
-        text-overflow: ellipsis;  
+        text-overflow: ellipsis;
       }
     }
 
@@ -832,10 +891,10 @@ li.select-all-child {
       .input-group-addon {
         border: 1px solid #e1e1e1;
         border-right: 0;
-        background-color: #F9FAFB;
+        background-color: #f9fafb;
       }
 
-      .form-control+.input-group-addon {
+      .form-control + .input-group-addon {
         border-left: 0;
       }
 
@@ -868,15 +927,15 @@ li.select-all-child {
       }
 
       .icon-shezhi:before {
-        color: #2D7FFF;
+        color: #2d7fff;
       }
 
       .icon-shezhi:hover:before {
-        color: #095BDC;
+        color: #095bdc;
       }
 
       .icon-delete:before {
-        color: #FF5E5E;
+        color: #ff5e5e;
       }
 
       .icon-delete:hover:before {
@@ -884,7 +943,8 @@ li.select-all-child {
       }
     }
 
-    .ColumnItem.active .ColumnGroup, .ColumnItem:hover .ColumnGroup {
+    .ColumnItem.active .ColumnGroup,
+    .ColumnItem:hover .ColumnGroup {
       display: block;
     }
   }
@@ -912,7 +972,7 @@ li.select-all-child {
     border-radius: 3px;
 
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       display: inline-block;
       top: -13px;
@@ -953,17 +1013,17 @@ li.select-all-child {
       }
 
       .input-right {
-        input[type='checkbox'] + label {
+        input[type="checkbox"] + label {
           padding: 0 3px !important;
         }
       }
     }
 
-    li[data-type=fillTop]~li {
+    li[data-type="fillTop"] ~ li {
       padding: 0 16px;
     }
 
-    li[data-role='columnSelector'] {
+    li[data-role="columnSelector"] {
       padding: 0;
     }
 
@@ -1003,7 +1063,6 @@ li.select-all-child {
     left: 3%;
     bottom: 100px;
     padding-right: 10px;
-    height: 100%;
     overflow-y: auto;
   }
 
@@ -1016,9 +1075,11 @@ li.select-all-child {
     #DisplayModePanle {
       padding-bottom: 6px;
 
-      .listOptionalDisplayMode, .listDisplayModeSelector, .listDisplayModeTab {
+      .listOptionalDisplayMode,
+      .listDisplayModeSelector,
+      .listDisplayModeTab {
         border: 0;
-        background-color: #FFF;
+        background-color: #fff;
         text-align: left;
         display: inline-block;
         width: 100%;
@@ -1041,8 +1102,8 @@ li.select-all-child {
           font-size: 12px;
           line-height: 30px;
           width: 49%;
-          color: #2D7FFF;
-          border: 1px solid #2D7FFF;
+          color: #2d7fff;
+          border: 1px solid #2d7fff;
           text-align: center;
           cursor: pointer;
         }
@@ -1058,10 +1119,10 @@ li.select-all-child {
 
         span.active {
           color: #fff;
-          background-color: #2D7FFF;
+          background-color: #2d7fff;
         }
 
-        .modeTab+div {
+        .modeTab + div {
           margin-top: 16px;
           margin-bottom: 14px;
           padding: 0;
@@ -1076,7 +1137,7 @@ li.select-all-child {
           span {
             width: 30%;
             border: 0;
-            color: #1A2C5B;
+            color: #1a2c5b;
             background: #f0f0f0;
             border-radius: 3px;
           }
@@ -1087,13 +1148,13 @@ li.select-all-child {
             text-decoration: none;
           }
 
-          span+span {
+          span + span {
             margin-left: 4%;
           }
         }
       }
 
-      input[type='checkbox']+label:before {
+      input[type="checkbox"] + label:before {
         left: 0;
       }
     }
@@ -1129,7 +1190,8 @@ li.select-all-child {
       padding-bottom: 16px;
     }
 
-    #DefaultDisplayChildCode, #SelectionSortBy {
+    #DefaultDisplayChildCode,
+    #SelectionSortBy {
       padding-top: 16px;
       padding-bottom: 16px;
       border-top: 1px solid #e1e1e1;
@@ -1143,7 +1205,8 @@ li.select-all-child {
   #timelineSetting {
     margin-bottom: 10px;
 
-    #timelineAxis, #timelineSortType {
+    #timelineAxis,
+    #timelineSortType {
       margin-bottom: 8px;
       width: 100%;
 
@@ -1161,14 +1224,18 @@ li.select-all-child {
     margin-bottom: 10px;
   }
 
-  #FieldSet, #ListSet {
+  #FieldSet,
+  #ListSet {
     .titletxt {
       font-weight: 600;
     }
   }
 
-  #ColumnPanle, #QueryItemPanle {
-    .propertyContent .ColumnItem.active, .propertyContent li.ColumnItem:hover, .propertyContent li.ChildColumnItem:hover {
+  #ColumnPanle,
+  #QueryItemPanle {
+    .propertyContent .ColumnItem.active,
+    .propertyContent li.ColumnItem:hover,
+    .propertyContent li.ChildColumnItem:hover {
       border-left: 4px solid rgba(30, 101, 255, 0.7);
       background-color: rgba(30, 101, 255, 0.05);
 
@@ -1176,7 +1243,7 @@ li.select-all-child {
         margin-left: -4px;
       }
     }
-    .propertyContent li.myColumnItemChildName:hover{
+    .propertyContent li.myColumnItemChildName:hover {
       margin-left: -4px;
       border-left: 4px solid rgba(30, 101, 255, 0.7);
       background-color: rgba(30, 101, 255, 0.05);
@@ -1215,27 +1282,30 @@ li.select-all-child {
       height: 36px;
       line-height: 36px;
       margin: 4px;
-      border: 1px solid #D6D4D4;
+      border: 1px solid #d6d4d4;
       border-radius: 3px;
       text-align: center;
     }
 
-    .link+.link {
+    .link + .link {
       float: right;
     }
   }
 
-  .btn-ok, .btn-ok:hover {
+  .btn-ok,
+  .btn-ok:hover {
     color: #fff;
-    background-color: #2D7FFF;
+    background-color: #2d7fff;
   }
 
-  .btn-cancel, .btn-cancel:hover {
+  .btn-cancel,
+  .btn-cancel:hover {
     color: #666;
-    background-color: #FFF;
+    background-color: #fff;
   }
 
-  a, a.active {
+  a,
+  a.active {
     transition: none;
     background-color: transparent;
   }
@@ -1245,7 +1315,9 @@ li.select-all-child {
   display: none;
 }
 
-a, a:link, a:hover {
+a,
+a:link,
+a:hover {
   text-decoration: none;
 }
 
@@ -1341,46 +1413,69 @@ a, a:link, a:hover {
     color: #333333;
   }
 }
-input[type=checkbox]:checked+label:before {
-    content: ""!important;
-    border: 0;
-    color: #fff!important;
-    background-size: 16px 16px;
+input[type="checkbox"]:checked + label:before {
+  content: "" !important;
+  border: 0;
+  color: #fff !important;
+  background-size: 16px 16px;
 }
-input[type=checkbox]:checked+label:before {
-    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTA4NDEyMjU2NjQwIiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE3MjAiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTAgMTAxLjg4OEMwIDQ1LjY3MDQgNDUuOTc3NiAwIDEwMS44ODggMGg4MjAuMjI0Qzk3OC4zMjk2IDAgMTAyNCA0NS45Nzc2IDEwMjQgMTAxLjg4OHY4MjAuMjI0YzAgNTYuMjY4OC00NS45Nzc2IDEwMS44ODgtMTAxLjg4OCAxMDEuODg4SDEwMS44ODhDNDUuNjcwNCAxMDI0IDAgOTc4LjAyMjQgMCA5MjIuMTEyVjEwMS44ODh6IG00MzguNzg0IDUwOS40NEwyOTIuMTk4NCA0NjQuNjRhNTEuMiA1MS4yIDAgMSAwLTcyLjM5NjggNzIuMzk2OGwyMTguOTgyNCAyMTkuMDMzNiAzNjEuNDcyLTM2MS40NzJhNTEuMiA1MS4yIDAgMSAwLTcyLjM0NTYtNzIuNDQ4TDQzOC43ODQgNjExLjI3Njh6IiBmaWxsPSIjMkQ3RkZGIiBwLWlkPSIxNzIxIj48L3BhdGg+PC9zdmc+) no-repeat 50%;
+input[type="checkbox"]:checked + label:before {
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTA4NDEyMjU2NjQwIiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE3MjAiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTAgMTAxLjg4OEMwIDQ1LjY3MDQgNDUuOTc3NiAwIDEwMS44ODggMGg4MjAuMjI0Qzk3OC4zMjk2IDAgMTAyNCA0NS45Nzc2IDEwMjQgMTAxLjg4OHY4MjAuMjI0YzAgNTYuMjY4OC00NS45Nzc2IDEwMS44ODgtMTAxLjg4OCAxMDEuODg4SDEwMS44ODhDNDUuNjcwNCAxMDI0IDAgOTc4LjAyMjQgMCA5MjIuMTEyVjEwMS44ODh6IG00MzguNzg0IDUwOS40NEwyOTIuMTk4NCA0NjQuNjRhNTEuMiA1MS4yIDAgMSAwLTcyLjM5NjggNzIuMzk2OGwyMTguOTgyNCAyMTkuMDMzNiAzNjEuNDcyLTM2MS40NzJhNTEuMiA1MS4yIDAgMSAwLTcyLjM0NTYtNzIuNDQ4TDQzOC43ODQgNjExLjI3Njh6IiBmaWxsPSIjMkQ3RkZGIiBwLWlkPSIxNzIxIj48L3BhdGg+PC9zdmc+);
 }
-input[type=checkbox], input[type=radio] {
+input[type="checkbox"],
+input[type="radio"] {
+  display: none;
+}
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+  width: 100px;
+  position: relative;
+  display: inline-block;
+  float: left;
+  width: auto;
+  min-height: 30px;
+  line-height: 30px;
+  margin-right: 0;
+  margin-bottom: 0;
+  padding: 0 0 0 1.5em !important;
+  text-align: left;
+  font-weight: 400;
+  cursor: pointer;
+}
+input[type="checkbox"] + label:before {
+  content: "";
+  position: absolute;
+  float: left;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  margin-right: 0;
+  background-color: #fafafa;
+  border: 1px solid #e1e1e1;
+  cursor: pointer;
+}
+.list-page {
+  text-align: right;
+  .ivu-page-item {
     display: none;
+  }
+  .ivu-page-item-jump-next {
+    display: none;
+  }
+  .ivu-page-item-jump-prev {
+    display: none;
+  }
 }
-input[type=checkbox]+label, input[type=radio]+label {
-    width: 100px;
-    position: relative;
-    display: inline-block;
-    float: left;
-    width: auto;
-    min-height: 30px;
-    line-height: 30px;
-    margin-right: 0;
-    margin-bottom: 0;
-    padding: 0 0 0 1.5em!important;
-    text-align: left;
-    font-weight: 400;
-    cursor: pointer;
-}
-input[type=checkbox]+label:before {
-    content: "";
-    position: absolute;
-    float: left;
-    top: 50%;
-    left: 0;
-    width: 16px;
-    height: 16px;
-    -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
-    margin-right: 0;
-    background-color: #fafafa;
-    border: 1px solid #e1e1e1;
-    cursor: pointer;
+.ivu-radio-group {
+  display: flex;
+  .ivu-radio-group-item {
+    flex: 1;
+  }
+  .ivu-radio {
+    margin-right: 4px !important;
+  }
 }
 </style>

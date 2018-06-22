@@ -57,8 +57,7 @@ export default {
         {
           type: "index",
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: "center"
         }
       ];
       this.listDataMap.forEach(item => {

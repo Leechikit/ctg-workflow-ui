@@ -23,6 +23,9 @@
             </ul>
         </div>
         <div class="g-right">
+              <div class="btn-list">
+                <Button type="primary" icon="plus">新增</Button>
+              </div>
               <div class="listview-table">
                   <Table border :columns="tableColumns" :data="tableDatas" :stripe="true" :loading="isLoading"></Table>
               </div>
@@ -183,6 +186,9 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+  .btn-list{
+    margin-bottom: 10px;
   }
   .sidebar {
     &-item {

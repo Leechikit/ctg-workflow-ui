@@ -199,6 +199,9 @@ export default {
         margin: 0 1px 0 0;
         position: relative;
         border-left: 1px solid #fff;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
         &:hover {
           background-color: #d4edfe !important;
         }

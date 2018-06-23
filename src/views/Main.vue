@@ -140,7 +140,9 @@
                 </div>
                 <div class="header-avator-con">
                     <!-- <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen> -->
-                    <authority v-hasPer="['index:setting']"></authority>
+                    <!-- lizijie -->
+                    <!-- <authority v-hasPer="['index:setting']"></authority> -->
+                    <authority></authority>
                     <!--<appMana></appMana>-->
                     <!-- <lock-screen></lock-screen> -->
                     <message-tip v-model="mesCount"></message-tip>

@@ -58,7 +58,8 @@ module.exports = merge(webpackBaseConfig, {
 			//匹配代理url
 			'/ctg-workflow':{
 				//目标服务器地址
-				target:'http://132.122.232.91:8091',
+                // target:'http://132.122.232.91:8091',
+                target: 'http://132.122.232.86:8080',
 				changeOrigin: true,
 			}
 		}

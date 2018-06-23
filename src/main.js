@@ -9,7 +9,6 @@ import 'iview/dist/styles/iview.css';
 import VueI18n from 'vue-i18n';
 import util from './libs/util';
 import $ from 'jquery';
-
 //拖拽
 import Store from './store/index'
 import 'iview/dist/styles/iview.css'

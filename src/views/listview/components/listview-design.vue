@@ -8,11 +8,31 @@
             <div id="FieldSet" class="pro-item">
               <!-- @*过滤条件*@ -->
               <div id="QueryItemPanle" class="proItemPanle queryItemPanle">
-                <div class="propertyTitle" v-on:click="showQueryContent=!showQueryContent">
+                <!-- <div class="propertyTitle" v-on:click="showQueryContent=!showQueryContent"> -->
+                <div class="propertyTitle">
                   <div class="titletxt">查询条件</div>
                   <div class="titleControl">
-                    <Icon id="btnAddQuery" type="plus"></Icon>
+                    <Icon id="btnAddQuery" type="plus" @click="showQueryPopupEvent"></Icon>
                   </div>
+                  <!-- <div class="queryListPopup" v-show="showQueryPopup">
+                    <ul class="queryList">
+                      <li class="queryItem" data-role="columnSelector" data-propertyname="select-all">
+                        <div class="queryGroup">
+                          <input type="checkbox" id="3e35cb5a-8340-403d-af2f-9da38ac53214" null="">
+                          <label for="3e35cb5a-8340-403d-af2f-9da38ac53214">全选</label>
+                        </div>
+                      </li>
+                      <li class="queryItem" v-for="item in listDataMap" v-if="!item.isChild" :data-id="item.code" style="">
+                          <div class="queryName" v-text="item.displayName"></div>
+                          <div class="queryGroup">
+                              <div class="ckbox ckbox-default">
+                                  <input type="checkbox" :id="item.code" v-model="item.isQuery">
+                                  <label :for="item.code"></label>
+                              </div>
+                          </div>
+                      </li>
+                    </ul>
+                  </div> -->
                 </div>
                 <div class="propertyContent" v-show="showQueryContent">
                   <ul id="QueryItemsList" class="ColumnList ui-sortable"></ul>
@@ -31,8 +51,8 @@
                         <ul id="ColumnList" class="ColumnList ui-sortable">
                           <draggable v-model="dragData">
                             <div v-for="item in dragData">
-                                <li class="ColumnItem" v-if="!item.isChildSchema" :data-id="item.id" style="">
-                                    <div class="ColumnName" v-text="item.name"></div>
+                                <li class="ColumnItem" v-if="!item.isChild" :data-id="item.code" style="">
+                                    <div class="ColumnName" v-text="item.displayName"></div>
                                     <div class="ColumnGroup">
                                         <div class="ckbox ckbox-default">
                                             <input type="checkbox" :id="item.id" v-model="item.isVisible">
@@ -40,8 +60,8 @@
                                         </div>
                                     </div>
                                 </li>
-                                <div class="ColumnItem myheight ischild ui-sortable" v-if="item.isChildSchema" :data-id="item.id"
-                                    data-total="Object.keys(item.children).length" data-selected="4">
+                                <div class="ColumnItem myheight ischild ui-sortable" v-if="item.isChild" :data-id="item.id"
+                                    data-total="Object.keys(item.childColumns).length" data-selected="4">
                                     <li class="myColumnItemChildName myshow" :data-id="item.id">
                                         <div class="ColumnName" style="cursor: move;">子表
                                             <div class="pull-right">
@@ -51,20 +71,20 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <draggable v-model="item.children">
-                                      <li class="myColumnItem F0000016 ChildColumnItem" v-for="child in item.children" :data-id="child.id" :data-parentId="item.parentId">
-                                          <div class="ColumnName" v-text="child.name"></div>
+                                    <draggable v-model="item.childColumns">
+                                      <li class="myColumnItem F0000016 ChildColumnItem" v-for="child in item.childColumns" :data-id="child.code" :data-parentId="item.parentId">
+                                          <div class="ColumnName" v-text="child.displayName"></div>
                                           <div class="ColumnGroup">
                                               <div class="ckbox ckbox-default">
-                                                  <input type="checkbox" :id="child.id" v-model="child.isVisible">
-                                                  <label :for="child.id" @click="childSchemaClick(child.parentId)"></label>
+                                                  <input type="checkbox" :id="child.code" v-model="child.isVisible">
+                                                  <label :for="child.code" @click="childSchemaClick(child.parentId)"></label>
                                               </div>
                                           </div>
                                       </li>
                                     </draggable>
                                 </div>
                             </div>
-                            </draggable>
+                          </draggable>
                         </ul>
                     </div>
                 </div>
@@ -170,7 +190,7 @@
                       <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left;display:block;position:relative;">默认显示子表
                         <i data-tip="选择的子表可在打开列表时直接进行展示" class="icon-tooltip icon-tips"></i>
                       </span>
-                      <RadioGroup v-model="IsChild" size="large">
+                      <RadioGroup v-model="chileModel" size="large">
                           <Radio label="显示"></Radio>
                           <Radio label="隐藏"></Radio>
                       </RadioGroup>
@@ -189,7 +209,7 @@
                     <!--排序方式-->
                     <div class="input-group" style="width: 100%;padding-top: 16px;padding-bottom: 16px;border-top: 1px solid #E1E1E1;">
                       <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left;display:block;">排序方式</span>
-                      <RadioGroup v-model="order" size="large">
+                      <RadioGroup v-model="orderModel" size="large">
                           <Radio label="升序"></Radio>
                           <Radio label="降序"></Radio>
                       </RadioGroup>
@@ -260,9 +280,24 @@
             </div>
           </TabPane>
         </Tabs>
-        <div id="PropertysPopover" class="popover filterContent">
+        <div id="PropertysPopover" v-show="showQueryPopup" class="popover filterContent up-popover" style="overflow-y: auto; display: block; top: 75px;">
           <div class="popover-content propertyContent">
-
+              <div>
+                  <ul class="nav nav-pills nav-stacked input-right">
+                      <li id="select-all" data-role="columnSelector" data-propertyname="select-all" class="clearfix">
+                          <div class="filter">
+                              <input type="checkbox" id="347f0931-c29f-4c7b-9365-2eda87beedce" null="">
+                              <label for="347f0931-c29f-4c7b-9365-2eda87beedce">全选</label>
+                          </div>
+                      </li>
+                      <li v-for="item in listDataMap" data-role="columnSelector" data-propertyname="item.id" class="clearfix">
+                          <div class="filter">
+                              <input type="checkbox" id="10d17841-33bd-4945-b792-64022e3f3610" v-model="item.isQuery">
+                              <label for="10d17841-33bd-4945-b792-64022e3f3610" v-text="item.displayName"></label>
+                          </div>
+                      </li>
+                  </ul>
+              </div>
           </div>
         </div>
       </div>
@@ -300,16 +335,25 @@ export default {
   props: ["listData", "tableData"],
   data() {
     return {
-      listDataMap: this.listData.filter(item => item.id != "Name"), // 数据映射
+      listDataMap: this.listData ? this.listData.filter(item => item.id != "Name") : [], // 数据映射
       sortItem: null,
-      IsChild: "显示",
-      order: "升序",
+      chileModel: "显示",
+      orderModel: "升序",
+      showQueryPopup: true,
       showQueryContent: true,
       showColumnContent: true,
       showModePropertyIndex: 0 //0 列表  1 日历  2 时间轴
     };
   },
   computed: {
+    // 子表是否显示
+    isChild(){
+      return this.chileModel == '显示' ? true : false;
+    },
+    // 排序类型 0-升序 1-降序
+    orderType(){
+      return this.orderModel == '升序' ? 0 : 1;
+    },
     // 拖拽
     dragData: {
       get() {
@@ -323,7 +367,7 @@ export default {
     allSelected() {
       let result = true;
       for (let i = 0, len = this.listDataMap.length; i < len; i++) {
-        if (!this.listDataMap[i].isVisible) {
+        if (!this.listDataMap[i].visible) {
           result = false;
           break;
         }
@@ -336,8 +380,8 @@ export default {
       this.listDataMap.forEach(item => {
         if (item.Sortable) {
           arrs.push({
-            value: item.id,
-            label: item.name
+            value: item.code,
+            label: item.displayName
           });
         }
       });
@@ -355,26 +399,26 @@ export default {
       ];
       this.listDataMap.forEach(item => {
         let obj = [];
-        if (item.isChildSchema) {
+        if (item.isChild && this.isChild) {
           let isEmpty = true;
-          for (let i = 0, len = item.children.length; i < len; i++) {
-            if (item.children[i].isVisible) {
+          for (let i = 0, len = item.childColumns.length; i < len; i++) {
+            if (item.childColumns[i].visible) {
               isEmpty = false;
               break;
             }
           }
           if (!isEmpty) {
             obj = {
-              title: item.name,
-              key: item.id,
+              title: item.displayName,
+              key: item.code,
               align: "center",
               children: []
             };
-            item.children.forEach(child => {
-              if (child.isVisible) {
+            item.childColumns.forEach(child => {
+              if (child.visible) {
                 obj.children.push({
-                  title: child.name,
-                  key: child.id,
+                  title: child.displayName,
+                  key: child.code,
                   align: "center",
                   minWidth: 100
                 });
@@ -382,10 +426,10 @@ export default {
             });
             tableArrs.push(obj);
           }
-        } else if (item.isVisible) {
+        } else if (item.visible) {
           obj = {
-            title: item.name,
-            key: item.id,
+            title: item.displayName,
+            key: item.code,
             align: "center",
             minWidth: 100
           };
@@ -412,7 +456,8 @@ export default {
       return tableArrs;
     }
   },
-  created() {},
+  created() {
+  },
   mounted() {
     var s = document.body.clientHeight - 95;
     $("#DesignerZone").css({ height: s + "px" });
@@ -422,6 +467,16 @@ export default {
     });
   },
   methods: {
+    // 显示查询列表
+    showQueryPopupEvent(){
+      this.showQueryPopup = true;
+      $(document).click((event)=>{
+        if(event.target.id != 'btnAddQuery'){
+          this.showQueryPopup = false;
+          $(document).off('click');
+        }
+      });
+    },
     // 保存列表
     saveList() {
       console.log("保存列表");
@@ -429,19 +484,19 @@ export default {
     // 全选
     selectAllClick(isAllVisible) {
       this.listDataMap.forEach((item, index) => {
-        item.isVisible = !isAllVisible;
+        item.visible = !isAllVisible;
         this.$set(this.listDataMap, index, item);
-        if (item.isChildSchema) {
-          this.selectChildrenAllClick(item.id, isAllVisible);
+        if (item.isChild) {
+          this.selectChildrenAllClick(item.code, isAllVisible);
         }
       });
     },
     // 子表全选
     selectChildrenAllClick(id, isAllVisible) {
       this.listDataMap.forEach((item, index) => {
-        if (item.isChildSchema && item.id == id) {
-          item.children.forEach((child, childIndex) => {
-            item.children[childIndex].isVisible = !isAllVisible;
+        if (item.isChild && item.code == id) {
+          item.childColumns.forEach((child, childIndex) => {
+            item.childColumns[childIndex].visible = !isAllVisible;
           });
           this.$set(this.listDataMap, index, item);
         }
@@ -451,15 +506,15 @@ export default {
     childSchemaClick(parentId) {
       setTimeout(() => {
         this.listDataMap.forEach((item, index) => {
-          if (item.isChildSchema && item.id == parentId) {
+          if (item.isChild && item.code == parentId) {
             let result = true;
-            for (let i = 0, len = item.children.length; i < len; i++) {
-              if (!item.children[i].isVisible) {
+            for (let i = 0, len = item.childColumns.length; i < len; i++) {
+              if (!item.childColumns[i].visible) {
                 result = false;
                 break;
               }
             }
-            item.isVisible = result;
+            item.visible = result;
             this.$set(this.listDataMap, index, item);
           }
         });
@@ -913,8 +968,9 @@ li.select-all-child {
   }
 
   #QueryItemPanle {
+    position: relative;
     margin-bottom: 10px;
-
+    
     .ColumnGroup {
       display: none;
 
@@ -1457,8 +1513,38 @@ input[type="checkbox"] + label:before {
   border: 1px solid #e1e1e1;
   cursor: pointer;
 }
+.form-query-dropdown input[type=checkbox]+label:before, .input-right input[type=checkbox]+label:before, .multiselect-container input[type=checkbox]+label:before {
+    right: 4px;
+    left: auto;
+    margin-top: 0;
+}
+.form-query-dropdown input[type=checkbox]+label, .input-right input[type=checkbox]+label, .multiselect-container input[type=checkbox]+label {
+    width: 100%;
+    padding: 0 10px!important;
+}
+.popover-content .dropdown-menu li:hover input[type=checkbox]+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]+label:before, .popover-content li[data-childcode]>div:hover input[type=checkbox]+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]+label:before {
+    border: 1px solid #fff;
+    background-color: rgba(30,101,255,0);
+}
+.popover-content .dropdownlist li:hover, .popover-content li[data-childcode]>div:hover, .popover-content li[data-role=columnSelector]:hover {
+    background-color: rgba(30,101,255,.6);
+    color: #fff;
+}
+.popover-content li[data-role=columnSelector]:hover label{
+  color: #fff;
+}
+.popover-content .dropdown-menu li:hover input[type=checkbox]:checked+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]:checked+label:before, .popover-content li[data-childcode]>div:hover input[type=checkbox]:checked+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]:checked+label:before {
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDQ2LjIgKDQ0NDk2KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5Hcm91cCAzPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+PC9kZWZzPgogICAgPGcgaWQ9IuWIl+ihqCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IuWIl+ihqOiuvuiuoV8zIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTMzNC4wMDAwMDAsIC0yNDMuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJHcm91cC0zIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMzM0LjAwMDAwMCwgMjQzLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS0xMi1Db3B5LTQiIGZpbGw9IiNGRkZGRkYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik02Ljg0NjI5Nzg1LDExLjk1MTg4NDYgQzYuNjQ5MTM2MSwxMS45NTE4ODQ2IDYuNDUyNzY1OCwxMS44NzYyODYxIDYuMzAyMzYwMzQsMTEuNzI1ODgwNiBMMy4yMjUwMTQ2MSw4LjYzNjA4NDgzIEMyLjkyNDk5NTEzLDguMzM0NTEyODkgMi45MjQ5OTUxMyw3Ljg0NTEyNDM4IDMuMjI1MDE0NjEsNy41NDM1NTI0NCBDMy41MjU4MTAzMiw3LjI0MTk1MDA3IDQuMDEyODU0OTMsNy4yNDE5NTAwNyA0LjMxMjg3NDQyLDcuNTQzNTUyNDQgTDYuODQ2Mjk3ODUsMTAuMDg3MDgyMSBMMTEuNjg3MTI1Niw1LjIyNjc3MjU0IEMxMS45ODcxNDUxLDQuOTI0NDA5MTUgMTIuNDc0MTg5Nyw0LjkyNDQwOTE1IDEyLjc3NDk4NTQsNS4yMjY3NzI1NCBDMTMuMDc1MDA0OSw1LjUyODM0NDQ3IDEzLjA3NTAwNDksNi4wMTY5NTY3NiAxMi43NzQ5ODU0LDYuMzE4NTI4NyBMNy4zOTAyMjAxNCwxMS43MjU4ODA2IEM3LjIzOTgyOTksMTEuODc2Mjg2MSA3LjA0MjY2ODE1LDExLjk1MTg4NDYgNi44NDYyOTc4NSwxMS45NTE4ODQ2IiBpZD0iRmlsbC0xLUNvcHktNCIgZmlsbD0iIzg2QUNGRiI+PC9wYXRoPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=) no-repeat 50% !important;
+    color: #fff!important;
+    background-size: 16px 16px;
+}
+.popover-content .dropdown-menu li:hover input[type=checkbox]+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]+label:before, .popover-content li[data-childcode]>div:hover input[type=checkbox]+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]+label:before {
+    border: 1px solid #fff;
+    background-color: rgba(30,101,255,0);
+}
 .list-page {
   text-align: right;
+  pointer-events: none;
   .ivu-page-item {
     display: none;
   }

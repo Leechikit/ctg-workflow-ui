@@ -1,7 +1,7 @@
 <template>
   <div id="app">
       <designer-top-nav :title="title" :schema-code="schemaCode" :app-code="appCode" :type="type"></designer-top-nav>
-      <c-listview-design :listData="viewData.listviewData" :tableData="tableData"></c-listview-design>
+      <c-listview-design :listData="getListThead" :tableData="tableData"></c-listview-design>
   </div>
 </template>
 
@@ -9,6 +9,8 @@
 import DesignerTopNav from "@/views/form/components/console/designer-top-nav";
 import cListviewDesign from "../components/listview-design";
 import { LoadListView } from "../assets/js/handler";
+import {mapGetters,mapMutations} from 'vuex';
+
 export default {
   name: "app",
   components: {
@@ -21,6 +23,7 @@ export default {
       type: "workflow",
       schemaCode: "",
       SheetCode: "",
+      appCode: "",
       viewData: {
         ListViewSetting: {
           BehindCode: "",
@@ -29,6 +32,9 @@ export default {
       },
       tableData: []
     };
+  },
+  computed:{
+    ...mapGetters(['getListThead'],'listview')
   },
   created() {
     this.Load();
@@ -44,163 +50,178 @@ export default {
     ];
   },
   methods: {
+    ...mapMutations(['setListThead'],'listview'),
     async Load() {
       let paramData = {
         ActionName: "Load",
         id: this.SheetCode
       };
-      // let data = await LoadListView(paramData, "POST");
-      let data = {
-        Successful: true,
-        ErrorMessage: null,
-        Logined: true,
-        data: {
-          title: "表单名称",
-          listviewData: [
-            {
-              name: "数据标题",
-              id: "Name",
-              type: 0,
-              isChildSchema: false,
-              isVisible: true,
-              Sortable: false
-            },
-            {
-              name: "创建人",
-              id: "1",
-              type: 0,
-              isChildSchema: false,
-              isVisible: true,
-              Sortable: true
-            },
-            {
-              name: "拥有者",
-              id: "2",
-              type: 0,
-              isChildSchema: false,
-              isVisible: false,
-              Sortable: false
-            },
-            {
-              name: "子表",
-              id: "3",
-              type: 0,
-              isChildSchema: true,
-              isVisible: true,
-              Sortable: false,
-              children: [
-                {
-                  name: "数字1",
-                  id: "31",
-                  parentId: "3",
-                  type: 0,
-                  isVisible: true,
-                  Sortable: true
-                },
-                {
-                  name: "数字2",
-                  id: "32",
-                  parentId: "3",
-                  type: 0,
-                  isVisible: true,
-                  Sortable: true
-                },
-                {
-                  name: "数字3",
-                  id: "33",
-                  parentId: "3",
-                  type: 0,
-                  isVisible: true,
-                  Sortable: true
-                }
-              ]
-            },
-            {
-              name: "部分",
-              id: "4",
-              type: 0,
-              isChildSchema: false,
-              isVisible: true,
-              Sortable: true
-            },
-            {
-              name: "顶顶顶",
-              id: "5",
-              type: 0,
-              isChildSchema: false,
-              isVisible: true,
-              Sortable: false
-            },
-            {
-              name: "子表2",
-              id: "6",
-              type: 0,
-              isChildSchema: true,
-              isVisible: true,
-              Sortable: false,
-              children: [
-                {
-                  name: "数字2",
-                  id: "61",
-                  parentId: "6",
-                  type: 0,
-                  isVisible: true,
-                  Sortable: true
-                },
-                {
-                  name: "数字2",
-                  id: "62",
-                  parentId: "6",
-                  type: 0,
-                  isVisible: true,
-                  Sortable: true
-                },
-                {
-                  name: "数字3",
-                  id: "63",
-                  parentId: "6",
-                  type: 0,
-                  isVisible: true,
-                  Sortable: true
-                }
-              ]
-            }
-          ]
+      HTTP.getListSetting({
+        appId:'3bd00151adc14c2383eee014a3400618482823988'
+      }).then(res=>{
+        if(res.code == 0){
+          this.setListThead(this.viewData.data);
+          this.title = this.viewData.title;
         }
-      };
-      if (data && data.Successful) {
-        this.viewData = data.data;
-        // let listViewSetting = this.viewData.ListViewSetting;
-        // let propertys = this.viewData.Propertys;
-        // let timelineAxisProperties = this.viewData.TimelineAxisProperties;
-        // let iconPropertys = this.viewData.IconPropertys;
-        // let formulaFields = JSON.parse(this.viewData.FormulaFields);
-        // let schemas = this.viewData.Schemas;
-        //
-        // window.viewSetting = new ViewSetting(
-        //   listViewSetting,
-        //   propertys,
-        //   timelineAxisProperties,
-        //   this.viewData.IsDevMode,
-        //   this.viewData.AppCode,
-        //   schemas,
-        //   this.viewData.SheetCode,
-        //   iconPropertys,
-        //   this.viewData.RemoveAble,
-        //   formulaFields
-        // );
-        // viewSetting.Init();
-        // this.viewSetting = viewSetting;
-        // var that = this;
-        // window.SaveListDesigner = function() {
-        //   that.viewSetting.Save(false);
-        // };
-        // this.IsDevMode = this.viewData.IsDevMode;
-        // if (this.IsDevMode === false) {
-        //   this.canSave = true;
-        // }
-      } else {
-      }
+      });
+      // let data = await LoadListView(paramData, "POST");
+      // let data = {
+      //   Successful: true,
+      //   ErrorMessage: null,
+      //   Logined: true,
+      //   data: {
+      //     title: "表单名称",
+      //     listviewData: [
+      //       {
+      //         name: "数据标题",
+      //         id: "Name",
+      //         type: 0,
+      //         isChildSchema: false,
+      //         isVisible: true,
+      //         Sortable: false
+      //       },
+      //       {
+      //         name: "创建人",
+      //         id: "1",
+      //         type: 0,
+      //         isChildSchema: false,
+      //         isVisible: true,
+      //         Sortable: true,
+      //         isQuery: true
+      //       },
+      //       {
+      //         name: "拥有者",
+      //         id: "2",
+      //         type: 0,
+      //         isChildSchema: false,
+      //         isVisible: false,
+      //         Sortable: false,
+      //         isQuery: true
+      //       },
+      //       {
+      //         name: "子表",
+      //         id: "3",
+      //         type: 0,
+      //         isChildSchema: true,
+      //         isVisible: true,
+      //         Sortable: false,
+      //         isQuery: false,
+      //         children: [
+      //           {
+      //             name: "数字1",
+      //             id: "31",
+      //             parentId: "3",
+      //             type: 0,
+      //             isVisible: true,
+      //             Sortable: true
+      //           },
+      //           {
+      //             name: "数字2",
+      //             id: "32",
+      //             parentId: "3",
+      //             type: 0,
+      //             isVisible: true,
+      //             Sortable: true
+      //           },
+      //           {
+      //             name: "数字3",
+      //             id: "33",
+      //             parentId: "3",
+      //             type: 0,
+      //             isVisible: true,
+      //             Sortable: true
+      //           }
+      //         ]
+      //       },
+      //       {
+      //         name: "部分",
+      //         id: "4",
+      //         type: 0,
+      //         isChildSchema: false,
+      //         isVisible: true,
+      //         Sortable: true,
+      //         isQuery: false
+      //       },
+      //       {
+      //         name: "顶顶顶",
+      //         id: "5",
+      //         type: 0,
+      //         isChildSchema: false,
+      //         isVisible: true,
+      //         Sortable: false,
+      //         isQuery: true
+      //       },
+      //       {
+      //         name: "子表2",
+      //         id: "6",
+      //         type: 0,
+      //         isChildSchema: true,
+      //         isVisible: true,
+      //         Sortable: false,
+      //         isQuery: true,
+      //         children: [
+      //           {
+      //             name: "数字2",
+      //             id: "61",
+      //             parentId: "6",
+      //             type: 0,
+      //             isVisible: true,
+      //             Sortable: true
+      //           },
+      //           {
+      //             name: "数字2",
+      //             id: "62",
+      //             parentId: "6",
+      //             type: 0,
+      //             isVisible: true,
+      //             Sortable: true
+      //           },
+      //           {
+      //             name: "数字3",
+      //             id: "63",
+      //             parentId: "6",
+      //             type: 0,
+      //             isVisible: true,
+      //             Sortable: true
+      //           }
+      //         ]
+      //       }
+      //     ]
+      //   }
+      // };
+      // if (data && data.Successful) {
+      //   this.viewData = data.data;
+      //   // let listViewSetting = this.viewData.ListViewSetting;
+      //   // let propertys = this.viewData.Propertys;
+      //   // let timelineAxisProperties = this.viewData.TimelineAxisProperties;
+      //   // let iconPropertys = this.viewData.IconPropertys;
+      //   // let formulaFields = JSON.parse(this.viewData.FormulaFields);
+      //   // let schemas = this.viewData.Schemas;
+      //   //
+      //   // window.viewSetting = new ViewSetting(
+      //   //   listViewSetting,
+      //   //   propertys,
+      //   //   timelineAxisProperties,
+      //   //   this.viewData.IsDevMode,
+      //   //   this.viewData.AppCode,
+      //   //   schemas,
+      //   //   this.viewData.SheetCode,
+      //   //   iconPropertys,
+      //   //   this.viewData.RemoveAble,
+      //   //   formulaFields
+      //   // );
+      //   // viewSetting.Init();
+      //   // this.viewSetting = viewSetting;
+      //   // var that = this;
+      //   // window.SaveListDesigner = function() {
+      //   //   that.viewSetting.Save(false);
+      //   // };
+      //   // this.IsDevMode = this.viewData.IsDevMode;
+      //   // if (this.IsDevMode === false) {
+      //   //   this.canSave = true;
+      //   // }
+      // } else {
+      // }
     }
   }
 };

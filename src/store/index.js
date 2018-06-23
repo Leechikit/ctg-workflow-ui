@@ -7,6 +7,7 @@ import state from "./state.js";
 import action from "./actions.js";
 import app from './modules/app';
 import user from './modules/user';
+import listview from './modules/listview';
 import {saveState, restoreState, customStorage} from '../helper/storge_helper.js';
 import participant from './participant.js';
 
@@ -24,6 +25,7 @@ const store = new Vuex.Store({
     userModule,
     app,
     user,
+    listview,
     participant
   },
   plugins: [vuexLocal.plugin]

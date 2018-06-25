@@ -17,11 +17,11 @@
 <script>
 import { Modal } from "iview";
 // import openModal from "@/views/home/assoModal.vue";
-import {mapGetters,mapMutations} from 'vuex';
+import { mapGetters, mapMutations } from "vuex";
 import openModal from "@/views/home/openModal.vue";
 
 export default {
-  components:{openModal},
+  components: { openModal },
   props: ["currentId", "isLoading"],
   data() {
     return {
@@ -34,7 +34,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('listview',['getListThead','getListTbody']),
+    ...mapGetters("listview", ["getListThead", "getListTbody"]),
     // 表格表头
     tableColumns() {
       const that = this;
@@ -43,6 +43,39 @@ export default {
           type: "index",
           width: 60,
           align: "center"
+        },
+        {
+          title: "数据标题",
+          key: "Name",
+          minWidth: 100,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "a",
+              {
+                on: {
+                  click() {
+                    Modal.info({
+                      //scrollable:true,
+                      title: params.row.Name,
+                      width: "800px",
+                      render: h => {
+                        return h(openModal, {
+                          props: {
+                            Code: params.row.ObjectId
+                          },
+                          on: {}
+                        });
+                      },
+                      onOk: () => {}
+                    });
+                    console.log(params.row.ObjectId);
+                  }
+                }
+              },
+              params.row.Name
+            );
+          }
         }
       ];
       this.getListThead.forEach(item => {
@@ -84,36 +117,6 @@ export default {
             sortable: item.Sortable,
             minWidth: 100
           };
-          // 数据标题点击
-          if (item.Code == "Name") {
-            obj.render = (h, params) => {
-              return h(
-                "a",
-                {
-                  on: {
-                    click() {
-                      Modal.info({
-                        //scrollable:true,
-                        title: params.row.Name,
-                        width: "800px",
-                        render: h => {
-                          return h(openModal, {
-                            props: {
-                              Code: params.row.ObjectId
-                            },
-                            on: {}
-                          });
-                        },
-                        onOk: () => {}
-                      });
-                      console.log(params.row.ObjectId);
-                    }
-                  }
-                },
-                params.row.Name
-              );
-            };
-          }
           tableArrs.push(obj);
         }
       });
@@ -137,12 +140,10 @@ export default {
       return tableArrs;
     }
   },
-  created(){
-
-  },
+  created() {},
   methods: {
-    openNew(){
-      console.log(this.currentId)
+    openNew() {
+      console.log(this.currentId);
       this.showModal = true;
     },
     changePageNum(num) {
@@ -167,7 +168,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  .btn-list{
+  .btn-list {
     margin-bottom: 10px;
   }
   .sidebar {

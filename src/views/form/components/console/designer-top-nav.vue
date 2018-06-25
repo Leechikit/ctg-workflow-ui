@@ -5,6 +5,7 @@
             <ButtonGroup>
                     <Button @click="link('0')">表单设计</Button>
                     <Button @click="link('1')">流程设计</Button>
+                    <Button @click="link('2')">列表设计</Button>
             </ButtonGroup>
 
             <!-- <ul class="designer-tab">
@@ -123,11 +124,6 @@ export default {
             this.$router.push({
                 name: 'design-sheet',
                 params: app });
-        }else if(this.type=="list"){
-            //保存列表
-            if(window.SaveListDesigner && $.isFunction(window.SaveListDesigner)){
-                window.SaveListDesigner.apply();
-            }
         }else if(this.type=="1"){
             //保存流程
             if (window.Model_Save && $.isFunction(window.Model_Save)) {
@@ -136,6 +132,16 @@ export default {
             let app = this.$store.state.app.currentApp;
             this.$router.push({
                 name: 'design-page',
+                params: app
+            });
+        }else if(this.type=="2"){
+            //保存列表
+            if(window.SaveListDesigner && $.isFunction(window.SaveListDesigner)){
+                window.SaveListDesigner.apply();
+            }
+            let app = this.$store.state.app.currentApp;
+            this.$router.push({
+                name: 'design-list',
                 params: app
             });
         }
@@ -153,6 +159,12 @@ export default {
             let app = this.$store.state.app.currentApp;
             this.$router.push({
                 name: 'design-page',
+                params: app
+            });
+        } else if (nodeType == '2') {
+            let app = this.$store.state.app.currentApp;
+            this.$router.push({
+                name: 'design-list',
                 params: app
             });
         }

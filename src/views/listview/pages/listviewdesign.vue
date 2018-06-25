@@ -8,7 +8,6 @@
 <script>
 import DesignerTopNav from "@/views/form/components/console/designer-top-nav";
 import cListviewDesign from "../components/listview-design";
-import { LoadListView } from "../assets/js/handler";
 import {mapGetters,mapMutations} from 'vuex';
 import HTTP from '../api/listview';
 
@@ -25,13 +24,7 @@ export default {
       schemaCode: "",
       SheetCode: "",
       appCode: "",
-      viewData: {
-        ListViewSetting: {
-          BehindCode: "",
-          Javascript: ""
-        }
-      },
-      tableData: []
+      moduleId: this.$router.currentRoute.params.appId
     };
   },
   computed:{
@@ -53,176 +46,14 @@ export default {
   methods: {
     ...mapMutations('listview',['setListThead']),
     async Load() {
-      let paramData = {
-        ActionName: "Load",
-        id: this.SheetCode
-      };
       HTTP.getListSetting({
-        appId:'685a273517d844a891c765e7b5880d14440330809'
+        appId:this.moduleId
       }).then(res=>{
         if(res.Code == 0){
           this.setListThead(res.Data.ListViewData);
           this.title = res.Data.Title;
         }
       });
-      // let data = await LoadListView(paramData, "POST");
-      // let data = {
-      //   Successful: true,
-      //   ErrorMessage: null,
-      //   Logined: true,
-      //   data: {
-      //     title: "表单名称",
-      //     listviewData: [
-      //       {
-      //         name: "数据标题",
-      //         id: "Name",
-      //         type: 0,
-      //         isChildSchema: false,
-      //         isVisible: true,
-      //         Sortable: false
-      //       },
-      //       {
-      //         name: "创建人",
-      //         id: "1",
-      //         type: 0,
-      //         isChildSchema: false,
-      //         isVisible: true,
-      //         Sortable: true,
-      //         isQuery: true
-      //       },
-      //       {
-      //         name: "拥有者",
-      //         id: "2",
-      //         type: 0,
-      //         isChildSchema: false,
-      //         isVisible: false,
-      //         Sortable: false,
-      //         isQuery: true
-      //       },
-      //       {
-      //         name: "子表",
-      //         id: "3",
-      //         type: 0,
-      //         isChildSchema: true,
-      //         isVisible: true,
-      //         Sortable: false,
-      //         isQuery: false,
-      //         children: [
-      //           {
-      //             name: "数字1",
-      //             id: "31",
-      //             parentId: "3",
-      //             type: 0,
-      //             isVisible: true,
-      //             Sortable: true
-      //           },
-      //           {
-      //             name: "数字2",
-      //             id: "32",
-      //             parentId: "3",
-      //             type: 0,
-      //             isVisible: true,
-      //             Sortable: true
-      //           },
-      //           {
-      //             name: "数字3",
-      //             id: "33",
-      //             parentId: "3",
-      //             type: 0,
-      //             isVisible: true,
-      //             Sortable: true
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         name: "部分",
-      //         id: "4",
-      //         type: 0,
-      //         isChildSchema: false,
-      //         isVisible: true,
-      //         Sortable: true,
-      //         isQuery: false
-      //       },
-      //       {
-      //         name: "顶顶顶",
-      //         id: "5",
-      //         type: 0,
-      //         isChildSchema: false,
-      //         isVisible: true,
-      //         Sortable: false,
-      //         isQuery: true
-      //       },
-      //       {
-      //         name: "子表2",
-      //         id: "6",
-      //         type: 0,
-      //         isChildSchema: true,
-      //         isVisible: true,
-      //         Sortable: false,
-      //         isQuery: true,
-      //         children: [
-      //           {
-      //             name: "数字2",
-      //             id: "61",
-      //             parentId: "6",
-      //             type: 0,
-      //             isVisible: true,
-      //             Sortable: true
-      //           },
-      //           {
-      //             name: "数字2",
-      //             id: "62",
-      //             parentId: "6",
-      //             type: 0,
-      //             isVisible: true,
-      //             Sortable: true
-      //           },
-      //           {
-      //             name: "数字3",
-      //             id: "63",
-      //             parentId: "6",
-      //             type: 0,
-      //             isVisible: true,
-      //             Sortable: true
-      //           }
-      //         ]
-      //       }
-      //     ]
-      //   }
-      // };
-      // if (data && data.Successful) {
-      //   this.viewData = data.data;
-      //   // let listViewSetting = this.viewData.ListViewSetting;
-      //   // let propertys = this.viewData.Propertys;
-      //   // let timelineAxisProperties = this.viewData.TimelineAxisProperties;
-      //   // let iconPropertys = this.viewData.IconPropertys;
-      //   // let formulaFields = JSON.parse(this.viewData.FormulaFields);
-      //   // let schemas = this.viewData.Schemas;
-      //   //
-      //   // window.viewSetting = new ViewSetting(
-      //   //   listViewSetting,
-      //   //   propertys,
-      //   //   timelineAxisProperties,
-      //   //   this.viewData.IsDevMode,
-      //   //   this.viewData.AppCode,
-      //   //   schemas,
-      //   //   this.viewData.SheetCode,
-      //   //   iconPropertys,
-      //   //   this.viewData.RemoveAble,
-      //   //   formulaFields
-      //   // );
-      //   // viewSetting.Init();
-      //   // this.viewSetting = viewSetting;
-      //   // var that = this;
-      //   // window.SaveListDesigner = function() {
-      //   //   that.viewSetting.Save(false);
-      //   // };
-      //   // this.IsDevMode = this.viewData.IsDevMode;
-      //   // if (this.IsDevMode === false) {
-      //   //   this.canSave = true;
-      //   // }
-      // } else {
-      // }
     }
   }
 };

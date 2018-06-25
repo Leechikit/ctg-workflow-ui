@@ -34,7 +34,7 @@
             </div>
         </div>
         <Modal v-model="showModal">
-          <openModal code="685a273517d844a891c765e7b5880d14440330809"></openModal>
+          <openModal :code="moduleId"></openModal>
         </Modal>
     </div>
 </template>
@@ -49,6 +49,7 @@ export default {
   props: ["listData", "tableData", "isLoading"],
   data() {
     return {
+      moduleId: this.$router.currentRoute.params.moduleId,
       self: this,
       pageNum: 1,
       pageSize: 10,

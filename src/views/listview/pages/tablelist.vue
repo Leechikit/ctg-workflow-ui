@@ -1,6 +1,6 @@
 <template>
   <div>
-    <c-listview :tableData="tableData" :isLoading="isLoading" @refreshData="refreshData"></c-listview>
+    <c-listview :isLoading="isLoading" @refreshData="refreshData"></c-listview>
   </div>
 </template>
 
@@ -16,205 +16,45 @@ export default {
   },
   data() {
     return {
-      SheetCode: "",
-      viewData: {
-        ListViewSetting: {
-          BehindCode: "",
-          Javascript: ""
-        }
-      },
-      tableData: [],
+      moduleId: this.$router.currentRoute.params.moduleId,
       isLoading: false
     };
   },
-  computed:{
-    ...mapGetters('listview',['getListThead'])
+  computed: {
+    ...mapGetters("listview", ["getListThead"])
   },
   created() {
-      console.log(this.$route);
     this.Load();
-    this.tableData = [
-      {
-        ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
-        Name: "1133.com ",
-        CreatedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        CreatedBy_Name: ["卢宗兴"],
-        OwnerId: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        OwnerId_Name: ["卢宗兴"],
-        OwnerDeptId: "18f923a7-5a5e-426d-94ae-a55ad1a4b240",
-        OwnerDeptId_Name: ["穿云团队"],
-        CreatedTime: "2018-06-06 10:21",
-        ModifiedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        ModifiedBy_Name: ["卢宗兴"],
-        ModifiedTime: "2018-06-06 10:24",
-        WorkflowInstanceId: "e68ea13a-144c-455e-9b94-ed945f57abd2",
-        Status: 2,
-        "1": "卢宗兴",
-        "2": "卢宗兴",
-        "3.31": "123",
-        "3.32": "222",
-        "3.33": "选项3",
-        "4": "是的",
-        "5": "好的",
-        "6.61": "123",
-        "6.62": "222",
-        "6.63": "选项3"
-      },
-      {
-        ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
-        Name: "1133.com ",
-        CreatedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        CreatedBy_Name: ["卢宗兴"],
-        OwnerId: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        OwnerId_Name: ["卢宗兴"],
-        OwnerDeptId: "18f923a7-5a5e-426d-94ae-a55ad1a4b240",
-        OwnerDeptId_Name: ["穿云团队"],
-        CreatedTime: "2018-06-06 10:21",
-        ModifiedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        ModifiedBy_Name: ["卢宗兴"],
-        ModifiedTime: "2018-06-06 10:24",
-        WorkflowInstanceId: "e68ea13a-144c-455e-9b94-ed945f57abd2",
-        Status: 2,
-        "1": "卢宗兴",
-        "2": "卢宗兴",
-        "3.31": "123",
-        "3.32": "222",
-        "3.33": "选项3",
-        "4": "是的",
-        "5": "好的",
-        "6.61": "123",
-        "6.62": "222",
-        "6.63": "选项3"
-      },
-      {
-        ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
-        Name: "1vv.com ",
-        CreatedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        CreatedBy_Name: ["卢宗兴"],
-        OwnerId: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        OwnerId_Name: ["卢宗兴"],
-        OwnerDeptId: "18f923a7-5a5e-426d-94ae-a55ad1a4b240",
-        OwnerDeptId_Name: ["穿云团队"],
-        CreatedTime: "2018-06-06 10:21",
-        ModifiedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-        ModifiedBy_Name: ["卢宗兴"],
-        ModifiedTime: "2018-06-06 10:24",
-        WorkflowInstanceId: "e68ea13a-144c-455e-9b94-ed945f57abd2",
-        Status: 2,
-        "1": "卢宗兴",
-        "2": "卢宗兴",
-        "3.31": "123",
-        "3.32": "222",
-        "3.33": "选项3",
-        "4": "1111",
-        "5": "好的",
-        "6.61": "123",
-        "6.62": "222",
-        "6.63": "选项3"
-      }
-    ];
   },
   methods: {
-    ...mapMutations("listview", ["setListThead",'setListTbody']),
+    ...mapMutations("listview", ["setListThead", "setListTbody"]),
     refreshData({ pageNum = 1, pageSize = 10 }) {
       this.isLoading = true;
       setTimeout(() => {
-        this.tableData = [
-          {
-            ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
-            Name: "1133.com ",
-            CreatedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            CreatedBy_Name: ["卢宗兴"],
-            OwnerId: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            OwnerId_Name: ["卢宗兴"],
-            OwnerDeptId: "18f923a7-5a5e-426d-94ae-a55ad1a4b240",
-            OwnerDeptId_Name: ["穿云团队"],
-            CreatedTime: "2018-06-06 10:21",
-            ModifiedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            ModifiedBy_Name: ["卢宗兴"],
-            ModifiedTime: "2018-06-06 10:24",
-            WorkflowInstanceId: "e68ea13a-144c-455e-9b94-ed945f57abd2",
-            Status: 2,
-            "1": "gggg",
-            "2": "卢宗兴",
-            "3.31": "123",
-            "3.32": "222",
-            "3.33": "选项3",
-            "4": "是的",
-            "5": "好的",
-            "6.61": "123",
-            "6.62": "222",
-            "6.63": "选项3"
-          },
-          {
-            ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
-            Name: "1133.com ",
-            CreatedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            CreatedBy_Name: ["卢宗兴"],
-            OwnerId: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            OwnerId_Name: ["卢宗兴"],
-            OwnerDeptId: "18f923a7-5a5e-426d-94ae-a55ad1a4b240",
-            OwnerDeptId_Name: ["穿云团队"],
-            CreatedTime: "2018-06-06 10:21",
-            ModifiedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            ModifiedBy_Name: ["卢宗兴"],
-            ModifiedTime: "2018-06-06 10:24",
-            WorkflowInstanceId: "e68ea13a-144c-455e-9b94-ed945f57abd2",
-            Status: 2,
-            "1": "ddd",
-            "2": "dddd",
-            "3.31": "123",
-            "3.32": "222",
-            "3.33": "选项3",
-            "4": "是的",
-            "5": "好的",
-            "6.61": "123",
-            "6.62": "222",
-            "6.63": "选项3"
-          },
-          {
-            ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
-            Name: "1vv.com ",
-            CreatedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            CreatedBy_Name: ["卢宗兴"],
-            OwnerId: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            OwnerId_Name: ["卢宗兴"],
-            OwnerDeptId: "18f923a7-5a5e-426d-94ae-a55ad1a4b240",
-            OwnerDeptId_Name: ["穿云团队"],
-            CreatedTime: "2018-06-06 10:21",
-            ModifiedBy: "1b19dbc0-7ec0-404b-b7b5-21c95298230c",
-            ModifiedBy_Name: ["卢宗兴"],
-            ModifiedTime: "2018-06-06 10:24",
-            WorkflowInstanceId: "e68ea13a-144c-455e-9b94-ed945f57abd2",
-            Status: 2,
-            "1": "卢宗兴",
-            "2": "卢宗兴",
-            "3.31": "123",
-            "3.32": "222",
-            "3.33": "选项3",
-            "4": "1111",
-            "5": "好的",
-            "6.61": "123",
-            "6.62": "222",
-            "6.63": "选项3"
+        HTTP.getListData({
+          appId: this.moduleId
+        }).then(res => {
+          if (res.Code == 0) {
+            this.setListTbody(res.Result.ReturnData);
+            this.title = res.Result.Title;
           }
-        ];
+        });
         this.isLoading = false;
       }, 1000);
     },
     async Load() {
       HTTP.getListSetting({
-        appId:'685a273517d844a891c765e7b5880d14440330809'
-      }).then(res=>{
-        if(res.Code == 0){
+        appId: this.moduleId
+      }).then(res => {
+        if (res.Code == 0) {
           this.setListThead(res.Data.ListViewData);
           this.title = res.Data.Title;
         }
       });
       HTTP.getListData({
-        appId:'685a273517d844a891c765e7b5880d14440330809'
-      }).then(res=>{
-        if(res.Code == 0){
+        appId: this.moduleId
+      }).then(res => {
+        if (res.Code == 0) {
           this.setListTbody(res.Result.ReturnData);
           this.title = res.Result.Title;
         }

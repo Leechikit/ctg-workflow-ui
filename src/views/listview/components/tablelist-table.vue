@@ -1,40 +1,16 @@
 <template>
     <div id="listview">
-        <div class="g-left">
-            <ul class="sidebar">
-                <li class="sidebar-item">
-                    <a href="javascript:">
-                        <Icon type="ios-paper"></Icon>
-                        <span class="text">11111</span>
-                    </a>
-                </li>
-                <li class="sidebar-item active">
-                    <a href="javascript:">
-                        <Icon type="ios-paper"></Icon>
-                        <span class="text">11111</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="javascript:">
-                        <Icon type="ios-paper"></Icon>
-                        <span class="text">11111</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="g-right">
-              <div class="btn-list">
-                <Button type="primary" icon="plus" @click="openNew">新增</Button>
-              </div>
-              <div class="listview-table">
-                  <Table border :columns="tableColumns" :data="tableDatas" :stripe="true" :loading="isLoading"></Table>
-              </div>
-              <div id="TablePageIndex" class="table-page">
-                <Page class-name="list-page" :current="pageNum" :total="total" :show-elevator="true" show-sizer show-total @on-change="changePageNum" @on-page-size-change="changePageSize"></Page>
-            </div>
+        <div class="btn-list">
+            <Button type="primary" icon="plus" @click="openNew">新增</Button>
+          </div>
+          <div class="listview-table">
+              <Table border :columns="tableColumns" :data="tableDatas" :stripe="true" :loading="isLoading"></Table>
+          </div>
+          <div id="TablePageIndex" class="table-page">
+            <Page class-name="list-page" :current="pageNum" :total="total" :show-elevator="true" show-sizer show-total @on-change="changePageNum" @on-page-size-change="changePageSize"></Page>
         </div>
         <Modal v-model="showModal">
-          <openModal :code="moduleId"></openModal>
+          <openModal v-if="showModal" :code="currentId"></openModal>
         </Modal>
     </div>
 </template>
@@ -46,7 +22,7 @@ import openModal from "@/views/home/openModal.vue";
 
 export default {
   components:{openModal},
-  props: ["listData", "tableData", "isLoading"],
+  props: ["currentId", "isLoading"],
   data() {
     return {
       moduleId: this.$router.currentRoute.params.moduleId,
@@ -161,8 +137,12 @@ export default {
       return tableArrs;
     }
   },
+  created(){
+
+  },
   methods: {
     openNew(){
+      console.log(this.currentId)
       this.showModal = true;
     },
     changePageNum(num) {
@@ -185,19 +165,8 @@ export default {
 <style lang="scss">
 #listview {
   height: 100%;
-  background-color: #fff;
-  .g-left {
-    float: left;
-    width: 240px;
-    height: 100%;
-  }
-  .g-right {
-    padding-left: 10px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+  display: flex;
+  flex-direction: column;
   .btn-list{
     margin-bottom: 10px;
   }

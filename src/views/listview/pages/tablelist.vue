@@ -1,21 +1,30 @@
 <template>
-  <div>
-    <c-listview :isLoading="isLoading" @refreshData="refreshData"></c-listview>
-  </div>
+    <div id="tablelist">
+        <div class="g-left">
+            <c-tablelist-sidebar></c-tablelist-sidebar>
+        </div>
+        <div class="g-right">
+            <c-tablelist-table :currentId="currentId" :isLoading="isLoading" @refreshData="refreshData"></c-tablelist-table>
+        </div>
+    </div>
 </template>
 
 <script>
-import cListview from "../components/listview";
+import cTablelistSidebar from "../components/tablelist-sidebar";
+import cTablelistTable from "../components/tablelist-table";
 import { mapGetters, mapMutations } from "vuex";
+import appHTTP from "../api/app-apply";
 import HTTP from "../api/listview";
 
 export default {
   name: "app",
   components: {
-    cListview
+    cTablelistSidebar,
+    cTablelistTable
   },
   data() {
     return {
+        currentId:null,
       moduleId: this.$router.currentRoute.params.moduleId,
       isLoading: false
     };
@@ -24,27 +33,29 @@ export default {
     ...mapGetters("listview", ["getListThead"])
   },
   created() {
-    this.Load();
+    this.refreshData();
   },
   methods: {
     ...mapMutations("listview", ["setListThead", "setListTbody"]),
-    refreshData({ pageNum = 1, pageSize = 10 }) {
+    refreshData({ pageNum = 1, pageSize = 10 }={}) {
       this.isLoading = true;
       setTimeout(() => {
-        HTTP.getListData({
-          appId: this.moduleId
-        }).then(res => {
-          if (res.Code == 0) {
-            this.setListTbody(res.Result.ReturnData);
-            this.title = res.Result.Title;
-          }
-        });
+        appHTTP.appList(this.moduleId)
+            .then(res=>{
+                if (res.code == 0 && res.page.result && res.page.result.length > 0) {
+                    const appInstData = res.page.result;
+                    if (appInstData.length != 0) {
+                    this.currentId = appInstData[0].id;
+                    this.loadList(this.currentId);
+                    }
+                }
+        })
         this.isLoading = false;
       }, 1000);
     },
-    async Load() {
+    async loadList(appId) {
       HTTP.getListSetting({
-        appId: this.moduleId
+        appId
       }).then(res => {
         if (res.Code == 0) {
           this.setListThead(res.Data.ListViewData);
@@ -52,7 +63,7 @@ export default {
         }
       });
       HTTP.getListData({
-        appId: this.moduleId
+        appId
       }).then(res => {
         if (res.Code == 0) {
           this.setListTbody(res.Result.ReturnData);
@@ -162,6 +173,22 @@ video {
   background-color: #fff;
   & > div {
     height: 100%;
+  }
+}
+#tablelist {
+  height: 100%;
+  background-color: #fff;
+  .g-left {
+    float: left;
+    width: 240px;
+    height: 100%;
+  }
+  .g-right {
+    padding-left: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 }
 </style>

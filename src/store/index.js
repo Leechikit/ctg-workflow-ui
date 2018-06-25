@@ -19,7 +19,6 @@ const vuexLocal = new VuexPersistence({
     saveState,
     restoreState
 });
-
 const store = new Vuex.Store({
   modules:{
     userModule,

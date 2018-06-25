@@ -24,7 +24,7 @@
         </div>
         <div class="g-right">
               <div class="btn-list">
-                <Button type="primary" icon="plus">新增</Button>
+                <Button type="primary" icon="plus" @click="openNew">新增</Button>
               </div>
               <div class="listview-table">
                   <Table border :columns="tableColumns" :data="tableDatas" :stripe="true" :loading="isLoading"></Table>
@@ -33,12 +33,19 @@
                 <Page class-name="list-page" :current="pageNum" :total="total" :show-elevator="true" show-sizer show-total @on-change="changePageNum" @on-page-size-change="changePageSize"></Page>
             </div>
         </div>
+        <Modal v-model="showModal">
+          <openModal code="685a273517d844a891c765e7b5880d14440330809"></openModal>
+        </Modal>
     </div>
 </template>
 <script>
 import { Modal } from "iview";
-import openModal from "@/views/home/assoModal.vue";
+// import openModal from "@/views/home/assoModal.vue";
+import {mapGetters,mapMutations} from 'vuex';
+import openModal from "@/views/home/openModal.vue";
+
 export default {
+  components:{openModal},
   props: ["listData", "tableData", "isLoading"],
   data() {
     return {
@@ -46,10 +53,11 @@ export default {
       pageNum: 1,
       pageSize: 10,
       total: 50,
-      listDataMap: this.listData // 数据映射
+      showModal: false
     };
   },
   computed: {
+    ...mapGetters('listview',['getListThead','getListTbody']),
     // 表格表头
     tableColumns() {
       const that = this;
@@ -60,47 +68,47 @@ export default {
           align: "center"
         }
       ];
-      this.listDataMap.forEach(item => {
+      this.getListThead.forEach(item => {
         let obj = [];
-        if (item.isChildSchema) {
+        if (item.IsChild) {
           let isEmpty = true;
-          for (let i = 0, len = item.children.length; i < len; i++) {
-            if (item.children[i].isVisible) {
+          for (let i = 0, len = item.ChildColumns.length; i < len; i++) {
+            if (item.ChildColumns[i].Visible) {
               isEmpty = false;
               break;
             }
           }
           if (!isEmpty) {
             obj = {
-              title: item.name,
-              key: item.id,
+              title: item.DisplayName,
+              key: item.Code,
               align: "center",
-              sortable: item.canSort,
+              sortable: item.Sortable,
               children: []
             };
-            item.children.forEach(child => {
-              if (child.isVisible) {
-                obj.children.push({
+            item.ChildColumns.forEach(child => {
+              if (child.Visible) {
+                obj.ChildColumns.push({
                   title: child.name,
                   key: child.id,
                   align: "center",
-                  sortable: item.canSort,
+                  sortable: item.Sortable,
                   minWidth: 100
                 });
               }
             });
             tableArrs.push(obj);
           }
-        } else if (item.isVisible) {
+        } else if (item.Visible) {
           obj = {
-            title: item.name,
-            key: item.id,
+            title: item.DisplayName,
+            key: item.Code,
             align: "center",
-            sortable: item.canSort,
+            sortable: item.Sortable,
             minWidth: 100
           };
           // 数据标题点击
-          if (item.id == "Name") {
+          if (item.Code == "Name") {
             obj.render = (h, params) => {
               return h(
                 "a",
@@ -114,7 +122,7 @@ export default {
                         render: h => {
                           return h(openModal, {
                             props: {
-                              code: params.row.ObjectId
+                              Code: params.row.ObjectId
                             },
                             on: {}
                           });
@@ -137,7 +145,7 @@ export default {
     // 表格数据
     tableDatas() {
       let tableArrs = [];
-      this.tableData.forEach(item => {
+      this.getListTbody.forEach(item => {
         let obj = {};
         for (let key in item) {
           const arrs = key.split(".");
@@ -153,6 +161,9 @@ export default {
     }
   },
   methods: {
+    openNew(){
+      this.showModal = true;
+    },
     changePageNum(num) {
       this.pageNum = num;
       this.$emit("refreshData", {

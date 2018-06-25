@@ -1,7 +1,7 @@
 <template>
   <div id="app">
       <designer-top-nav :title="title" :schema-code="schemaCode" :app-code="appCode" :type="type"></designer-top-nav>
-      <c-listview-design :listData="getListThead" :tableData="tableData"></c-listview-design>
+      <c-listview-design :tableData="tableData"></c-listview-design>
   </div>
 </template>
 
@@ -10,6 +10,7 @@ import DesignerTopNav from "@/views/form/components/console/designer-top-nav";
 import cListviewDesign from "../components/listview-design";
 import { LoadListView } from "../assets/js/handler";
 import {mapGetters,mapMutations} from 'vuex';
+import HTTP from '../api/listview';
 
 export default {
   name: "app",
@@ -34,7 +35,7 @@ export default {
     };
   },
   computed:{
-    ...mapGetters(['getListThead'],'listview')
+    ...mapGetters('listview',['getListThead'])
   },
   created() {
     this.Load();
@@ -50,18 +51,18 @@ export default {
     ];
   },
   methods: {
-    ...mapMutations(['setListThead'],'listview'),
+    ...mapMutations('listview',['setListThead']),
     async Load() {
       let paramData = {
         ActionName: "Load",
         id: this.SheetCode
       };
       HTTP.getListSetting({
-        appId:'3bd00151adc14c2383eee014a3400618482823988'
+        appId:'685a273517d844a891c765e7b5880d14440330809'
       }).then(res=>{
-        if(res.code == 0){
-          this.setListThead(this.viewData.data);
-          this.title = this.viewData.title;
+        if(res.Code == 0){
+          this.setListThead(res.Data.ListViewData);
+          this.title = res.Data.Title;
         }
       });
       // let data = await LoadListView(paramData, "POST");

@@ -22,12 +22,12 @@
                           <label for="3e35cb5a-8340-403d-af2f-9da38ac53214">全选</label>
                         </div>
                       </li>
-                      <li class="queryItem" v-for="item in listDataMap" v-if="!item.isChild" :data-id="item.code" style="">
-                          <div class="queryName" v-text="item.displayName"></div>
+                      <li class="queryItem" v-for="item in getListThead" v-if="!item.IsChild" :data-id="item.Code" style="">
+                          <div class="queryName" v-text="item.DisplayName"></div>
                           <div class="queryGroup">
                               <div class="ckbox ckbox-default">
-                                  <input type="checkbox" :id="item.code" v-model="item.isQuery">
-                                  <label :for="item.code"></label>
+                                  <input type="checkbox" :id="item.Code" v-model="item.isQuery">
+                                  <label :for="item.Code"></label>
                               </div>
                           </div>
                       </li>
@@ -51,33 +51,33 @@
                         <ul id="ColumnList" class="ColumnList ui-sortable">
                           <draggable v-model="dragData">
                             <div v-for="item in dragData">
-                                <li class="ColumnItem" v-if="!item.isChild" :data-id="item.code" style="">
-                                    <div class="ColumnName" v-text="item.displayName"></div>
+                                <li class="ColumnItem" v-if="!item.IsChild" :data-id="item.Code" style="">
+                                    <div class="ColumnName" v-text="item.DisplayName"></div>
                                     <div class="ColumnGroup">
                                         <div class="ckbox ckbox-default">
-                                            <input type="checkbox" :id="item.id" v-model="item.isVisible">
-                                            <label :for="item.id"></label>
+                                            <input type="checkbox" :id="item.Code" v-model="item.Visible">
+                                            <label :for="item.Code"></label>
                                         </div>
                                     </div>
                                 </li>
-                                <div class="ColumnItem myheight ischild ui-sortable" v-if="item.isChild" :data-id="item.id"
-                                    data-total="Object.keys(item.childColumns).length" data-selected="4">
-                                    <li class="myColumnItemChildName myshow" :data-id="item.id">
+                                <div class="ColumnItem myheight IsChild ui-sortable" v-if="item.IsChild" :data-id="item.Code"
+                                    data-total="Object.keys(item.ChildColumns).length" data-selected="4">
+                                    <li class="myColumnItemChildName myshow" :data-id="item.Code">
                                         <div class="ColumnName" style="cursor: move;">子表
                                             <div class="pull-right">
-                                                <input type="checkbox" :id="item.id" class="allcb" v-model="item.isVisible">
-                                                <label :for="item.id" style="width:100px;" @click="selectChildrenAllClick(item.id, item.isVisible)">全选</label>
+                                                <input type="checkbox" :id="item.Code" class="allcb" v-model="item.Visible">
+                                                <label :for="item.Code" style="width:100px;" @click="selectChildrenAllClick(item.Code, item.Visible)">全选</label>
                                                 <i class="fa  fa-angle-down pugll-right" style="cursor:pointer;"></i>
                                             </div>
                                         </div>
                                     </li>
-                                    <draggable v-model="item.childColumns">
-                                      <li class="myColumnItem F0000016 ChildColumnItem" v-for="child in item.childColumns" :data-id="child.code" :data-parentId="item.parentId">
-                                          <div class="ColumnName" v-text="child.displayName"></div>
+                                    <draggable v-model="item.ChildColumns">
+                                      <li class="myColumnItem F0000016 ChildColumnItem" v-for="child in item.ChildColumns" :data-id="child.Code" :data-ParentId="item.ParentId">
+                                          <div class="ColumnName" v-text="child.DisplayName"></div>
                                           <div class="ColumnGroup">
                                               <div class="ckbox ckbox-default">
-                                                  <input type="checkbox" :id="child.code" v-model="child.isVisible">
-                                                  <label :for="child.code" @click="childSchemaClick(child.parentId)"></label>
+                                                  <input type="checkbox" :id="child.Code" v-model="child.Visible">
+                                                  <label :for="child.Code" @click="childSchemaClick(child.ParentId)"></label>
                                               </div>
                                           </div>
                                       </li>
@@ -290,10 +290,10 @@
                               <label for="347f0931-c29f-4c7b-9365-2eda87beedce">全选</label>
                           </div>
                       </li>
-                      <li v-for="item in listDataMap" data-role="columnSelector" data-propertyname="item.id" class="clearfix">
+                      <li v-for="item in getListThead" data-role="columnSelector" data-propertyname="item.id" class="clearfix">
                           <div class="filter">
                               <input type="checkbox" id="10d17841-33bd-4945-b792-64022e3f3610" v-model="item.isQuery">
-                              <label for="10d17841-33bd-4945-b792-64022e3f3610" v-text="item.displayName"></label>
+                              <label for="10d17841-33bd-4945-b792-64022e3f3610" v-text="item.DisplayName"></label>
                           </div>
                       </li>
                   </ul>
@@ -328,6 +328,8 @@
 
 <script>
 import draggable from "vuedraggable";
+import {mapGetters,mapMutations} from 'vuex';
+
 export default {
   components: {
     draggable
@@ -335,19 +337,20 @@ export default {
   props: ["listData", "tableData"],
   data() {
     return {
-      listDataMap: this.listData ? this.listData.filter(item => item.id != "Name") : [], // 数据映射
+      // listDataMap: this.listData ? this.listData.filter(item => item.id != "Name") : [], // 数据映射
       sortItem: null,
       chileModel: "显示",
       orderModel: "升序",
-      showQueryPopup: true,
+      showQueryPopup: false,
       showQueryContent: true,
       showColumnContent: true,
       showModePropertyIndex: 0 //0 列表  1 日历  2 时间轴
     };
   },
   computed: {
+    ...mapGetters('listview',['getListThead']),
     // 子表是否显示
-    isChild(){
+    IsChild(){
       return this.chileModel == '显示' ? true : false;
     },
     // 排序类型 0-升序 1-降序
@@ -357,17 +360,17 @@ export default {
     // 拖拽
     dragData: {
       get() {
-        return this.listDataMap;
+        return this.getListThead;
       },
       set(val) {
-        return (this.listDataMap = val);
+        this.setListThead(val);
       }
     },
     // 全选
     allSelected() {
       let result = true;
-      for (let i = 0, len = this.listDataMap.length; i < len; i++) {
-        if (!this.listDataMap[i].visible) {
+      for (let i = 0, len = this.getListThead.length; i < len; i++) {
+        if (!this.getListThead[i].Visible) {
           result = false;
           break;
         }
@@ -377,11 +380,11 @@ export default {
     // 排序列表
     sortList() {
       let arrs = [];
-      this.listDataMap.forEach(item => {
-        if (item.Sortable) {
+      this.getListThead.forEach(item => {
+        if (item.sortable) {
           arrs.push({
-            value: item.code,
-            label: item.displayName
+            value: item.Code,
+            label: item.DisplayName
           });
         }
       });
@@ -397,28 +400,28 @@ export default {
           minWidth: 100
         }
       ];
-      this.listDataMap.forEach(item => {
+      this.getListThead.forEach(item => {
         let obj = [];
-        if (item.isChild && this.isChild) {
+        if (item.IsChild && this.IsChild) {
           let isEmpty = true;
-          for (let i = 0, len = item.childColumns.length; i < len; i++) {
-            if (item.childColumns[i].visible) {
+          for (let i = 0, len = item.ChildColumns.length; i < len; i++) {
+            if (item.ChildColumns[i].Visible) {
               isEmpty = false;
               break;
             }
           }
           if (!isEmpty) {
             obj = {
-              title: item.displayName,
-              key: item.code,
+              title: item.DisplayName,
+              key: item.Code,
               align: "center",
               children: []
             };
-            item.childColumns.forEach(child => {
-              if (child.visible) {
+            item.ChildColumns.forEach(child => {
+              if (child.Visible) {
                 obj.children.push({
-                  title: child.displayName,
-                  key: child.code,
+                  title: child.DisplayName,
+                  key: child.Code,
                   align: "center",
                   minWidth: 100
                 });
@@ -426,10 +429,10 @@ export default {
             });
             tableArrs.push(obj);
           }
-        } else if (item.visible) {
+        } else if (item.Visible) {
           obj = {
-            title: item.displayName,
-            key: item.code,
+            title: item.DisplayName,
+            key: item.Code,
             align: "center",
             minWidth: 100
           };
@@ -467,6 +470,7 @@ export default {
     });
   },
   methods: {
+    ...mapMutations('listview',['setListThead']),
     // 显示查询列表
     showQueryPopupEvent(){
       this.showQueryPopup = true;
@@ -483,41 +487,41 @@ export default {
     },
     // 全选
     selectAllClick(isAllVisible) {
-      this.listDataMap.forEach((item, index) => {
-        item.visible = !isAllVisible;
-        this.$set(this.listDataMap, index, item);
-        if (item.isChild) {
-          this.selectChildrenAllClick(item.code, isAllVisible);
+      this.getListThead.forEach((item, index) => {
+        item.Visible = !isAllVisible;
+        this.$set(this.getListThead, index, item);
+        if (item.IsChild) {
+          this.selectChildrenAllClick(item.Code, isAllVisible);
         }
       });
     },
     // 子表全选
     selectChildrenAllClick(id, isAllVisible) {
-      this.listDataMap.forEach((item, index) => {
-        if (item.isChild && item.code == id) {
-          item.childColumns.forEach((child, childIndex) => {
-            item.childColumns[childIndex].visible = !isAllVisible;
+      let result = this.getListThead.map((item, index) => {
+        if (item.IsChild && item.Code == id) {
+          item.ChildColumns.forEach((child, childIndex) => {
+            item.ChildColumns[childIndex].Visible = !isAllVisible;
           });
-          this.$set(this.listDataMap, index, item);
         }
       });
+      this.setListThead(result);
     },
     // 子表选项点击
-    childSchemaClick(parentId) {
+    childSchemaClick(ParentId) {
       setTimeout(() => {
-        this.listDataMap.forEach((item, index) => {
-          if (item.isChild && item.code == parentId) {
+        let result = this.getListThead.map((item, index) => {
+          if (item.IsChild && item.Code == ParentId) {
             let result = true;
-            for (let i = 0, len = item.childColumns.length; i < len; i++) {
-              if (!item.childColumns[i].visible) {
+            for (let i = 0, len = item.ChildColumns.length; i < len; i++) {
+              if (!item.ChildColumns[i].Visible) {
                 result = false;
                 break;
               }
             }
-            item.visible = result;
-            this.$set(this.listDataMap, index, item);
+            item.Visible = result;
           }
         });
+        this.setListThead(result);
       }, 0);
     }
   }
@@ -731,7 +735,7 @@ li.select-all-child {
                   }
                 }
 
-                .ColumnItem.ischild {
+                .ColumnItem.IsChild {
                   li {
                     padding-left: 10px;
                     list-style: none;
@@ -1083,7 +1087,7 @@ li.select-all-child {
       padding: 0;
     }
 
-    li[data-childcode] {
+    li[data-childCode] {
       height: auto;
       padding: 0;
 
@@ -1522,23 +1526,23 @@ input[type="checkbox"] + label:before {
     width: 100%;
     padding: 0 10px!important;
 }
-.popover-content .dropdown-menu li:hover input[type=checkbox]+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]+label:before, .popover-content li[data-childcode]>div:hover input[type=checkbox]+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]+label:before {
+.popover-content .dropdown-menu li:hover input[type=checkbox]+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]+label:before, .popover-content li[data-childCode]>div:hover input[type=checkbox]+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]+label:before {
     border: 1px solid #fff;
     background-color: rgba(30,101,255,0);
 }
-.popover-content .dropdownlist li:hover, .popover-content li[data-childcode]>div:hover, .popover-content li[data-role=columnSelector]:hover {
+.popover-content .dropdownlist li:hover, .popover-content li[data-childCode]>div:hover, .popover-content li[data-role=columnSelector]:hover {
     background-color: rgba(30,101,255,.6);
     color: #fff;
 }
 .popover-content li[data-role=columnSelector]:hover label{
   color: #fff;
 }
-.popover-content .dropdown-menu li:hover input[type=checkbox]:checked+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]:checked+label:before, .popover-content li[data-childcode]>div:hover input[type=checkbox]:checked+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]:checked+label:before {
+.popover-content .dropdown-menu li:hover input[type=checkbox]:checked+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]:checked+label:before, .popover-content li[data-childCode]>div:hover input[type=checkbox]:checked+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]:checked+label:before {
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDQ2LjIgKDQ0NDk2KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5Hcm91cCAzPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+PC9kZWZzPgogICAgPGcgaWQ9IuWIl+ihqCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IuWIl+ihqOiuvuiuoV8zIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTMzNC4wMDAwMDAsIC0yNDMuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJHcm91cC0zIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMzM0LjAwMDAwMCwgMjQzLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS0xMi1Db3B5LTQiIGZpbGw9IiNGRkZGRkYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik02Ljg0NjI5Nzg1LDExLjk1MTg4NDYgQzYuNjQ5MTM2MSwxMS45NTE4ODQ2IDYuNDUyNzY1OCwxMS44NzYyODYxIDYuMzAyMzYwMzQsMTEuNzI1ODgwNiBMMy4yMjUwMTQ2MSw4LjYzNjA4NDgzIEMyLjkyNDk5NTEzLDguMzM0NTEyODkgMi45MjQ5OTUxMyw3Ljg0NTEyNDM4IDMuMjI1MDE0NjEsNy41NDM1NTI0NCBDMy41MjU4MTAzMiw3LjI0MTk1MDA3IDQuMDEyODU0OTMsNy4yNDE5NTAwNyA0LjMxMjg3NDQyLDcuNTQzNTUyNDQgTDYuODQ2Mjk3ODUsMTAuMDg3MDgyMSBMMTEuNjg3MTI1Niw1LjIyNjc3MjU0IEMxMS45ODcxNDUxLDQuOTI0NDA5MTUgMTIuNDc0MTg5Nyw0LjkyNDQwOTE1IDEyLjc3NDk4NTQsNS4yMjY3NzI1NCBDMTMuMDc1MDA0OSw1LjUyODM0NDQ3IDEzLjA3NTAwNDksNi4wMTY5NTY3NiAxMi43NzQ5ODU0LDYuMzE4NTI4NyBMNy4zOTAyMjAxNCwxMS43MjU4ODA2IEM3LjIzOTgyOTksMTEuODc2Mjg2MSA3LjA0MjY2ODE1LDExLjk1MTg4NDYgNi44NDYyOTc4NSwxMS45NTE4ODQ2IiBpZD0iRmlsbC0xLUNvcHktNCIgZmlsbD0iIzg2QUNGRiI+PC9wYXRoPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=) no-repeat 50% !important;
     color: #fff!important;
     background-size: 16px 16px;
 }
-.popover-content .dropdown-menu li:hover input[type=checkbox]+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]+label:before, .popover-content li[data-childcode]>div:hover input[type=checkbox]+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]+label:before {
+.popover-content .dropdown-menu li:hover input[type=checkbox]+label:before, .popover-content .dropdownlist li:hover input[type=checkbox]+label:before, .popover-content li[data-childCode]>div:hover input[type=checkbox]+label:before, .popover-content li[data-role=columnSelector]:hover input[type=checkbox]+label:before {
     border: 1px solid #fff;
     background-color: rgba(30,101,255,0);
 }

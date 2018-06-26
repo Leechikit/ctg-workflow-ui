@@ -24,36 +24,43 @@ export default {
       schemaCode: "",
       SheetCode: "",
       appCode: "",
-      moduleId: this.$router.currentRoute.params.appId
+      appId: this.$router.currentRoute.params.appId,
+      tableData:[]
     };
   },
-  computed:{
-    ...mapGetters('listview',['getListThead'])
-  },
   created() {
-    this.Load();
-    this.tableData = [
-      {
-        ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
-        Name: "模拟数据 "
-      },
-      {
-        ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
-        Name: "模拟数据 "
-      }
-    ];
+    this.loadListSetting({
+      appId: this.appId
+    });
+    this.loadListData();
   },
   methods: {
-    ...mapMutations('listview',['setListThead']),
-    async Load() {
+    ...mapMutations('listview',['setListThead','setListConfig']),
+    loadListSetting({ appId }) {
       HTTP.getListSetting({
-        appId:this.moduleId
+        appId
       }).then(res=>{
         if(res.Code == 0){
           this.setListThead(res.Data.ListViewData);
+          this.setListConfig({
+            SortDirection: res.Data.SortDirection,
+            SortBy: res.Data.SortBy
+          })
           this.title = res.Data.Title;
         }
       });
+    },
+    loadListData(){
+      this.tableData = [
+        {
+          ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
+          Name: "模拟数据 "
+        },
+        {
+          ObjectId: "12c6fa61-79ff-441f-8e76-01718b5bb88c",
+          Name: "模拟数据 "
+        }
+      ];
     }
   }
 };

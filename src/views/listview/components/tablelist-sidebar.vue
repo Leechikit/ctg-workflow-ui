@@ -1,32 +1,34 @@
 <template>
     <ul class="sidebar">
-        <li class="sidebar-item">
+        <li class="sidebar-item" v-for="item in getListApp" :class="item.id == currentId ? 'active': ''" @click="refreshListData(item.id)">
             <a href="javascript:">
                 <Icon type="ios-paper"></Icon>
-                <span class="text">11111</span>
-            </a>
-        </li>
-        <li class="sidebar-item active">
-            <a href="javascript:">
-                <Icon type="ios-paper"></Icon>
-                <span class="text">11111</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="javascript:">
-                <Icon type="ios-paper"></Icon>
-                <span class="text">11111</span>
+                <span class="text" v-text="item.appName"></span>
             </a>
         </li>
     </ul>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
-    
-}
+  props: ["currentId"],
+  data() {
+    return {};
+  },
+  computed: {
+    ...mapGetters("listview", ["getListApp"])
+  },
+  methods: {
+    refreshListData(appId) {
+      this.$emit('loadListData',{appId})
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
 .sidebar {
+  height: 100%;
+  overflow-y: auto;
   &-item {
     a {
       display: block;

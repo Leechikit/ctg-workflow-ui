@@ -190,7 +190,7 @@
                       <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left;display:block;position:relative;">默认显示子表
                         <i data-tip="选择的子表可在打开列表时直接进行展示" class="icon-tooltip icon-tips"></i>
                       </span>
-                      <RadioGroup v-model="chileModel" size="large">
+                      <RadioGroup v-model="childModel" size="large">
                           <Radio label="显示"></Radio>
                           <Radio label="隐藏"></Radio>
                       </RadioGroup>
@@ -200,7 +200,7 @@
                     <!--排序字段-->
                     <div id="SelectionSortBy" class="input-group mb15" style="width: 100%;">
                       <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left; display:block;">排序字段</span>
-                      <Select v-model="sortItem" style="width:200px">
+                      <Select v-model="sortByModel" style="width:200px">
                           <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                       </Select>
                     </div>
@@ -209,9 +209,9 @@
                     <!--排序方式-->
                     <div class="input-group" style="width: 100%;padding-top: 16px;padding-bottom: 16px;border-top: 1px solid #E1E1E1;">
                       <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left;display:block;">排序方式</span>
-                      <RadioGroup v-model="orderModel" size="large">
-                          <Radio label="升序"></Radio>
+                      <RadioGroup v-model="sortDirectionModel" size="large">
                           <Radio label="降序"></Radio>
+                          <Radio label="升序"></Radio>
                       </RadioGroup>
                     </div>
                   </div>
@@ -334,13 +334,12 @@ export default {
   components: {
     draggable
   },
-  props: ["listData", "tableData"],
+  props: ["tableData"],
   data() {
     return {
-      // listDataMap: this.listData ? this.listData.filter(item => item.id != "Name") : [], // 数据映射
-      sortItem: null,
-      chileModel: "显示",
-      orderModel: "升序",
+      childModel: "显示",
+      sortDirectionModel: '降序',
+      sortByModel:'',
       showQueryPopup: false,
       showQueryContent: true,
       showColumnContent: true,
@@ -348,14 +347,19 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('listview',['getListThead']),
+    ...mapGetters('listview',['getListThead','getListConfig']),
     // 子表是否显示
     IsChild(){
       return this.chileModel == '显示' ? true : false;
     },
     // 排序类型 0-升序 1-降序
-    orderType(){
-      return this.orderModel == '升序' ? 0 : 1;
+    sortDirection(){
+      return this.sortDirectionModel == '升序' ? 0 : 1;
+    },
+    // 排序字段
+    sortBy(){
+      const filterArrs = this.getListThead.filter(item=>item.DisplayName == this.sortByModel);
+      return filterArrs.length > 0 ? filterArrs[0].Code : '';
     },
     // 拖拽
     dragData: {
@@ -459,6 +463,13 @@ export default {
       return tableArrs;
     }
   },
+  watch:{
+    getListConfig(newListConfig){
+      this.sortDirectionModel = newListConfig.SortDirection == 1 ? '降序' : '升序';
+      const filterArrs = this.getListThead.filter(item=>item.Code == newListConfig.SortBy);
+      this.sortByModel = filterArrs.length > 0 ? filterArrs[0].DisplayName : '';
+    }
+  },
   created() {
   },
   mounted() {
@@ -470,7 +481,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations('listview',['setListThead']),
+    ...mapMutations('listview',['setListThead','setListConfig']),
     // 显示查询列表
     showQueryPopupEvent(){
       this.showQueryPopup = true;
@@ -1560,7 +1571,8 @@ input[type="checkbox"] + label:before {
   }
 }
 .ivu-radio-group {
-  display: flex;
+  width: 100%;
+  display: flex !important;
   .ivu-radio-group-item {
     flex: 1;
   }

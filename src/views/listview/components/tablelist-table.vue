@@ -7,7 +7,7 @@
               <Table border :columns="tableColumns" :data="tableDatas" :stripe="true" :loading="isLoading"></Table>
           </div>
           <div id="TablePageIndex" class="table-page">
-            <Page class-name="list-page" :current="pageNum" :total="total" :show-elevator="true" show-sizer show-total @on-change="changePageNum" @on-page-size-change="changePageSize"></Page>
+            <Page class-name="list-page" :current="pageNum" :total="total" :show-elevator="true" show-sizer show-total :page-size-opts="[10,20,50,100]" @on-change="changePageNum" @on-page-size-change="changePageSize"></Page>
         </div>
         <Modal v-model="showModal">
           <openModal v-if="showModal" :code="currentId"></openModal>
@@ -16,7 +16,7 @@
 </template>
 <script>
 import { Modal } from "iview";
-// import openModal from "@/views/home/assoModal.vue";
+// import assoModal from "@/views/home/assoModal.vue";
 import { mapGetters, mapMutations } from "vuex";
 import openModal from "@/views/home/openModal.vue";
 
@@ -62,7 +62,7 @@ export default {
                       render: h => {
                         return h(openModal, {
                           props: {
-                            Code: params.row.ObjectId
+                            code: that.currentId + ',' +params.row.ObjectId
                           },
                           on: {}
                         });
@@ -78,7 +78,7 @@ export default {
           }
         }
       ];
-      this.getListThead.forEach(item => {
+      this.getListThead && this.getListThead.forEach(item => {
         let obj = [];
         if (item.IsChild) {
           let isEmpty = true;
@@ -125,7 +125,7 @@ export default {
     // 表格数据
     tableDatas() {
       let tableArrs = [];
-      this.getListTbody.forEach(item => {
+      this.getListTbody && this.getListTbody.forEach(item => {
         let obj = {};
         for (let key in item) {
           const arrs = key.split(".");
@@ -143,19 +143,18 @@ export default {
   created() {},
   methods: {
     openNew() {
-      console.log(this.currentId);
       this.showModal = true;
     },
     changePageNum(num) {
       this.pageNum = num;
-      this.$emit("refreshData", {
+      this.$emit("loadListData", {
         pageNum: this.pageNum,
         pageSize: this.pageSize
       });
     },
     changePageSize(size) {
       this.pageSize = size;
-      this.$emit("refreshData", {
+      this.$emit("loadListData", {
         pageNum: this.pageNum,
         pageSize: this.pageSize
       });

@@ -1,10 +1,10 @@
 <template>
     <div id="tablelist">
         <div class="g-left">
-            <c-tablelist-sidebar></c-tablelist-sidebar>
+            <c-tablelist-sidebar @loadListData="loadListData"></c-tablelist-sidebar>
         </div>
         <div class="g-right">
-            <c-tablelist-table :currentId="currentId" :isLoading="isLoading" @refreshData="refreshData"></c-tablelist-table>
+            <c-tablelist-table :currentId="currentId" :isLoading="isLoading" @loadListData="loadListData"></c-tablelist-table>
         </div>
     </div>
 </template>
@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-        currentId:null,
+      currentId: null,
       moduleId: this.$router.currentRoute.params.moduleId,
       isLoading: false
     };
@@ -33,27 +33,30 @@ export default {
     ...mapGetters("listview", ["getListThead"])
   },
   created() {
-    this.refreshData();
+    this.loadListApp();
   },
   methods: {
-    ...mapMutations("listview", ["setListThead", "setListTbody"]),
-    refreshData({ pageNum = 1, pageSize = 10 }={}) {
+    ...mapMutations("listview", ["setListThead", "setListTbody", "setListApp"]),
+    loadListApp() {
       this.isLoading = true;
-      setTimeout(() => {
-        appHTTP.appList(this.moduleId)
-            .then(res=>{
-                if (res.code == 0 && res.page.result && res.page.result.length > 0) {
-                    const appInstData = res.page.result;
-                    if (appInstData.length != 0) {
-                    this.currentId = appInstData[0].id;
-                    this.loadList(this.currentId);
-                    }
-                }
-        })
-        this.isLoading = false;
-      }, 1000);
+      appHTTP.appList(this.moduleId).then(res => {
+        if (res.code == 0 && res.page.result && res.page.result.length > 0) {
+          const appInstData = res.page.result;
+          this.setListApp(appInstData);
+          if (appInstData.length != 0) {
+            this.currentId = appInstData[0].id;
+            this.loadListSetting({
+              appId: this.currentId
+            });
+            this.loadListData({
+              appId: this.currentId
+            });
+          }
+        }
+      });
+      this.isLoading = false;
     },
-    async loadList(appId) {
+    loadListSetting({ appId }) {
       HTTP.getListSetting({
         appId
       }).then(res => {
@@ -62,6 +65,9 @@ export default {
           this.title = res.Data.Title;
         }
       });
+    },
+    loadListData({ appId, pageNum = 1, pageSize = 10 } = {}) {
+        this.isLoading = true;
       HTTP.getListData({
         appId
       }).then(res => {
@@ -69,6 +75,7 @@ export default {
           this.setListTbody(res.Result.ReturnData);
           this.title = res.Result.Title;
         }
+        this.isLoading = false;
       });
     }
   }

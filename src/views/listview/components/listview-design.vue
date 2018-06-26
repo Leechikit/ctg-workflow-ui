@@ -93,7 +93,7 @@
           <TabPane label="列表设置" name="name2">
             <div id="ListSet" class="pro-item">
               <!-- @*列表显示*@ -->
-              <div id="DisplayModePanle">
+              <!-- <div id="DisplayModePanle">
                 <div class="propertyTitle" style="display:none;">
                   <div class="titletxt">列表显示</div>
                   <div class="titleControl">
@@ -101,7 +101,7 @@
                   </div>
                 </div>
 
-                <!-- <div class="propertyContent" style="overflow:inherit;">
+                <div class="propertyContent" style="overflow:inherit;">
                   <ul class="ColumnList">
                     <li style="display:none;">
                       <div class="input-group">
@@ -163,8 +163,8 @@
                       </span>
                     </li>
                   </ul>
-                </div> -->
-              </div>
+                </div>
+              </div> -->
 
               <div class="input-group" style="width: 100%;">
                 <!--批量操作-->
@@ -184,18 +184,16 @@
                   </div>
                 </div> -->
                 <div id="listSetting" v-show="showModePropertyIndex==0">
-                  <div>
-                    <!--子表展示-->
-                    <div id="DefaultDisplayChildCode" class="input-group mb15" style="width: 100%;">
-                      <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left;display:block;position:relative;">默认显示子表
-                        <i data-tip="选择的子表可在打开列表时直接进行展示" class="icon-tooltip icon-tips"></i>
-                      </span>
-                      <RadioGroup v-model="childModel" size="large">
-                          <Radio label="显示"></Radio>
-                          <Radio label="隐藏"></Radio>
-                      </RadioGroup>
-                    </div>
-                  </div>
+                  <!--子表展示-->
+                  <!-- <div id="DefaultDisplayChildCode" class="input-group mb15" style="width: 100%;">
+                    <span class="input-group-addon titletxt" style="border:0; background-color:#fff;width:100px;text-align:left;display:block;position:relative;">默认显示子表
+                      <i data-tip="选择的子表可在打开列表时直接进行展示" class="icon-tooltip icon-tips"></i>
+                    </span>
+                    <RadioGroup v-model="childModel" size="large">
+                        <Radio label="显示"></Radio>
+                        <Radio label="隐藏"></Radio>
+                    </RadioGroup>
+                  </div> -->
                   <div>
                     <!--排序字段-->
                     <div id="SelectionSortBy" class="input-group mb15" style="width: 100%;">
